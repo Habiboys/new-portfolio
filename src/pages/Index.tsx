@@ -66,78 +66,79 @@ const Index = () => {
               </span>
             </motion.div>
 
-            {/* Navigation Links */}
+            {/* Desktop Navigation Links */}
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
+              transition={{ duration: 0.5 }}
               className="hidden md:flex items-center space-x-8"
             >
               <button
                 onClick={() => scrollToSection('about')}
-                className="text-gray-600 hover:text-gray-900 transition-colors duration-200 relative group"
+                className="text-gray-600 hover:text-gray-900 transition-colors duration-200"
               >
                 About
-                <div className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gray-900 group-hover:w-full transition-all duration-300"></div>
               </button>
               <button
                 onClick={() => scrollToSection('experience')}
-                className="text-gray-600 hover:text-gray-900 transition-colors duration-200 relative group"
+                className="text-gray-600 hover:text-gray-900 transition-colors duration-200"
               >
                 Experience
-                <div className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gray-900 group-hover:w-full transition-all duration-300"></div>
               </button>
               <button
                 onClick={() => scrollToSection('projects')}
-                className="text-gray-600 hover:text-gray-900 transition-colors duration-200 relative group"
+                className="text-gray-600 hover:text-gray-900 transition-colors duration-200"
               >
                 Projects
-                <div className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gray-900 group-hover:w-full transition-all duration-300"></div>
               </button>
               <button
                 onClick={() => scrollToSection('contact')}
-                className="text-gray-600 hover:text-gray-900 transition-colors duration-200 relative group"
+                className="text-gray-600 hover:text-gray-900 transition-colors duration-200"
               >
                 Contact
-                <div className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gray-900 group-hover:w-full transition-all duration-300"></div>
               </button>
             </motion.div>
 
             {/* Mobile Menu Button */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
+            <motion.button
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
               transition={{ duration: 0.5 }}
-              className="md:hidden"
+              className="md:hidden p-2 rounded-md hover:bg-gray-100"
+              onClick={() => {
+                const mobileMenu = document.getElementById('mobile-menu');
+                if (mobileMenu) {
+                  mobileMenu.classList.toggle('hidden');
+                }
+              }}
             >
-              <Button
-                variant="ghost"
-                size="sm"
-                className="hover:bg-gray-100"
-                onClick={() => document.getElementById('mobile-menu')?.classList.toggle('hidden')}
+              <svg
+                className="h-6 w-6"
+                fill="none"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
               >
-                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              </Button>
-            </motion.div>
+                <path d="M4 6h16M4 12h16M4 18h16"></path>
+              </svg>
+            </motion.button>
           </div>
 
           {/* Mobile Menu */}
           <motion.div
             id="mobile-menu"
-            className="hidden md:hidden pb-4"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            transition={{ duration: 0.3 }}
+            initial={false}
+            className="hidden md:hidden"
           >
-            <div className="flex flex-col space-y-4">
+            <div className="px-2 pt-2 pb-3 space-y-1">
               <button
                 onClick={() => {
                   scrollToSection('about');
                   document.getElementById('mobile-menu')?.classList.add('hidden');
                 }}
-                className="text-gray-600 hover:text-gray-900 transition-colors duration-200 py-2"
+                className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
               >
                 About
               </button>
@@ -146,7 +147,7 @@ const Index = () => {
                   scrollToSection('experience');
                   document.getElementById('mobile-menu')?.classList.add('hidden');
                 }}
-                className="text-gray-600 hover:text-gray-900 transition-colors duration-200 py-2"
+                className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
               >
                 Experience
               </button>
@@ -155,7 +156,7 @@ const Index = () => {
                   scrollToSection('projects');
                   document.getElementById('mobile-menu')?.classList.add('hidden');
                 }}
-                className="text-gray-600 hover:text-gray-900 transition-colors duration-200 py-2"
+                className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
               >
                 Projects
               </button>
@@ -164,7 +165,7 @@ const Index = () => {
                   scrollToSection('contact');
                   document.getElementById('mobile-menu')?.classList.add('hidden');
                 }}
-                className="text-gray-600 hover:text-gray-900 transition-colors duration-200 py-2"
+                className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
               >
                 Contact
               </button>
@@ -401,15 +402,15 @@ const Index = () => {
 
       {/* Experience Modal */}
       <Dialog open={!!selectedExperience} onOpenChange={() => setSelectedExperience(null)}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-4 md:p-6">
           {selectedExperience && (
             <>
               <DialogHeader>
-                <DialogTitle className="text-2xl font-semibold">
+                <DialogTitle className="text-xl md:text-2xl font-semibold">
                   {selectedExperience.title}
                 </DialogTitle>
                 <DialogDescription>
-                  <div className="flex items-center justify-between mt-2">
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mt-2">
                     <div className="flex items-center gap-4">
                       <div className="w-12 h-12 rounded-full overflow-hidden">
                         <img 
@@ -429,14 +430,14 @@ const Index = () => {
                         </div>
                       </div>
                     </div>
-                    <span className="text-sm text-gray-500 bg-gray-100 px-4 py-1.5 rounded-full">
+                    <span className="text-sm text-gray-500 bg-gray-100 px-4 py-1.5 rounded-full self-start md:self-center">
                       {selectedExperience.period}
                     </span>
                   </div>
                 </DialogDescription>
               </DialogHeader>
               
-              <div className="space-y-8 mt-6">
+              <div className="space-y-6 mt-6">
                 {/* Featured Image */}
                 <div className="aspect-[2/1] rounded-lg overflow-hidden">
                   <img 
@@ -446,7 +447,7 @@ const Index = () => {
                   />
                 </div>
 
-                <div className="grid md:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
                   {/* Main Content - Left Side */}
                   <div className="md:col-span-2 space-y-6">
                     <div>
@@ -600,18 +601,18 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Project Modal with Auto-sliding Images */}
+      {/* Project Modal */}
       <Dialog open={!!selectedProject} onOpenChange={() => setSelectedProject(null)}>
-        <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto p-4 md:p-6">
           {selectedProject && (
             <>
               <DialogHeader>
-                <DialogTitle className="text-2xl font-semibold mb-4">
+                <DialogTitle className="text-xl md:text-2xl font-semibold mb-4">
                   {selectedProject.title}
                 </DialogTitle>
               </DialogHeader>
               
-              <div className="space-y-8">
+              <div className="space-y-6">
                 {/* Auto-sliding Image Display */}
                 <div className="relative aspect-video rounded-xl overflow-hidden bg-gray-100">
                   <motion.img 
@@ -633,9 +634,9 @@ const Index = () => {
                         prev === 0 ? selectedProject.images.length - 1 : prev - 1
                       );
                     }}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 hover:bg-white flex items-center justify-center transition-all duration-200 backdrop-blur-sm"
+                    className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 w-8 md:w-10 h-8 md:h-10 rounded-full bg-white/80 hover:bg-white flex items-center justify-center transition-all duration-200 backdrop-blur-sm"
                   >
-                    <ChevronLeft className="w-6 h-6 text-gray-700" />
+                    <ChevronLeft className="w-4 md:w-6 h-4 md:h-6 text-gray-700" />
                   </button>
                   <button 
                     onClick={(e) => {
@@ -644,9 +645,9 @@ const Index = () => {
                         (prev + 1) % selectedProject.images.length
                       );
                     }}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 hover:bg-white flex items-center justify-center transition-all duration-200 backdrop-blur-sm"
+                    className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 w-8 md:w-10 h-8 md:h-10 rounded-full bg-white/80 hover:bg-white flex items-center justify-center transition-all duration-200 backdrop-blur-sm"
                   >
-                    <ChevronRight className="w-6 h-6 text-gray-700" />
+                    <ChevronRight className="w-4 md:w-6 h-4 md:h-6 text-gray-700" />
                   </button>
 
                   {/* Image indicators */}
@@ -658,9 +659,9 @@ const Index = () => {
                           e.stopPropagation();
                           setCurrentImageIndex(index);
                         }}
-                        className={`w-2 h-2 rounded-full transition-all duration-200 ${
+                        className={`w-1.5 md:w-2 h-1.5 md:h-2 rounded-full transition-all duration-200 ${
                           index === currentImageIndex 
-                            ? 'bg-white w-6' 
+                            ? 'bg-white w-4 md:w-6' 
                             : 'bg-white/50 hover:bg-white/80'
                         }`}
                       />
@@ -669,7 +670,7 @@ const Index = () => {
                 </div>
 
                 {/* Project Details */}
-                <div className="grid md:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
                   {/* Left Column - Description */}
                   <div className="md:col-span-2 space-y-6">
                     <div>
@@ -710,7 +711,7 @@ const Index = () => {
                       </div>
                     </div>
 
-                    <div className="space-y-3">
+                    <div className="flex flex-col space-y-3">
                       <Button 
                         variant="default" 
                         className="w-full bg-gray-900 hover:bg-gray-800 transition-all duration-300"
@@ -735,17 +736,17 @@ const Index = () => {
       </Dialog>
 
       {/* Contact Section */}
-      <section id="contact" className="py-20 px-6">
+      <section id="contact" className="py-16 md:py-20 px-4 md:px-6">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-light mb-12">{contactInfo.title}</h2>
-          <p className="text-lg text-gray-700 mb-12 max-w-2xl mx-auto leading-relaxed">
+          <h2 className="text-2xl md:text-4xl font-light mb-8 md:mb-12">{contactInfo.title}</h2>
+          <p className="text-base md:text-lg text-gray-700 mb-8 md:mb-12 max-w-2xl mx-auto leading-relaxed">
             {contactInfo.description}
           </p>
-          <div className="flex justify-center space-x-6">
+          <div className="flex flex-col md:flex-row justify-center gap-4 md:space-x-6">
             <Button 
               variant="outline" 
               size="lg"
-              className="group border-gray-300 hover:border-gray-900 transition-all duration-300"
+              className="group border-gray-300 hover:border-gray-900 transition-all duration-300 w-full md:w-auto"
               onClick={() => window.open(`mailto:${personalInfo.email}`)}
             >
               <Mail className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform duration-200" />
@@ -754,7 +755,7 @@ const Index = () => {
             <Button 
               variant="ghost" 
               size="lg"
-              className="group hover:bg-gray-100 transition-colors duration-200"
+              className="group hover:bg-gray-100 transition-colors duration-200 w-full md:w-auto"
               onClick={() => window.open(personalInfo.github, '_blank')}
             >
               <Github className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform duration-200" />
@@ -763,7 +764,7 @@ const Index = () => {
             <Button 
               variant="ghost" 
               size="lg"
-              className="group hover:bg-gray-100 transition-colors duration-200"
+              className="group hover:bg-gray-100 transition-colors duration-200 w-full md:w-auto"
               onClick={() => window.open(personalInfo.linkedin, '_blank')}
             >
               <Linkedin className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform duration-200" />
@@ -774,7 +775,7 @@ const Index = () => {
       </section>
 
       {/* Footer */}
-      <footer className="py-8 px-6 border-t border-gray-100">
+      <footer className="py-6 md:py-8 px-4 md:px-6 border-t border-gray-100">
         <div className="max-w-4xl mx-auto text-center">
           <p className="text-gray-500 text-sm">
             © 2024 {personalInfo.name}. Built with React and Tailwind CSS.
