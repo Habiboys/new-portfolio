@@ -13,6 +13,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import habibiePhoto from "../assets/images/habibie.png";
 import { personalInfo, aboutMe, techStack, experiences, projects, contactInfo } from "@/data/portfolioData";
+import { Boxes } from "@/components/ui/background-boxes";
 
 const Index = () => {
   const [selectedProject, setSelectedProject] = useState(null);
@@ -179,142 +180,106 @@ const Index = () => {
 
       {/* Modern Hero Section */}
       <section className="min-h-screen flex items-center justify-center px-6 relative overflow-hidden">
-        {/* Clean gradient background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-gray-100/50"></div>
-        
-        {/* Subtle decorative elements */}
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1 }}
-          className="absolute inset-0 overflow-hidden pointer-events-none"
-        >
-          {/* Subtle grid pattern */}
-          <div className="absolute inset-0 opacity-20">
-            <svg
-              className="absolute inset-0 w-full h-full"
-              viewBox="0 0 100 100"
-              preserveAspectRatio="none"
-            >
-              <defs>
-                <pattern
-                  id="hero-grid"
-                  x="0"
-                  y="0"
-                  width="10"
-                  height="10"
-                  patternUnits="userSpaceOnUse"
-                >
-                  <path
-                    d="M 10 0 L 0 0 0 10"
-                    fill="none"
-                    stroke="rgba(156, 163, 175, 0.15)"
-                    strokeWidth="0.5"
-                  />
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#hero-grid)" />
-            </svg>
+        {/* Background dengan boxes */}
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-gray-100/50">
+          <div className="absolute inset-0 w-full h-full [mask-image:radial-gradient(transparent,white)]" />
+          <div className="absolute inset-0 z-[1]">
+            <Boxes />
           </div>
+        </div>
 
-          {/* Smooth gradient overlay */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1.5 }}
-            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
-          />
-        </motion.div>
+        {/* Content wrapper dengan pointer-events-none */}
+        <div className="relative w-full pointer-events-none">
+          <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center relative z-[2]">
+            {/* Left Side - Photo dengan pointer-events-auto */}
+            <motion.div 
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="flex justify-center lg:justify-end pointer-events-auto"
+            >
+              <div className="relative max-w-[580px] w-full">
+                <motion.div 
+                  whileHover={{ scale: 1.02 }}
+                  transition={{ duration: 0.3 }}
+                  className="aspect-[4/5] rounded-lg overflow-hidden"
+                >
+                  <img 
+                    src={habibiePhoto}
+                    alt="Muhammad Nouval Habibie"
+                    className="w-full h-full object-contain scale-110"
+                  />
+                </motion.div>
+              </div>
+            </motion.div>
 
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center relative z-10">
-          {/* Left Side - Photo */}
-          <motion.div 
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="flex justify-center lg:justify-end"
-          >
-            <div className="relative max-w-[580px] w-full">
-              <motion.div 
-                whileHover={{ scale: 1.02 }}
-                transition={{ duration: 0.3 }}
-                className="aspect-[4/5] rounded-lg overflow-hidden"
-              >
-                <img 
-                  src={habibiePhoto}
-                  alt="Muhammad Nouval Habibie"
-                  className="w-full h-full object-contain scale-110"
-                />
-              </motion.div>
-            </div>
-          </motion.div>
-
-          {/* Right Side - Content */}
-          <motion.div 
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-center lg:text-left"
-          >
-            <div>
-              <motion.h1 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.6 }}
-                className="text-5xl md:text-6xl font-light mb-6 tracking-tight"
-              >
-                {personalInfo.name.split(' ').slice(0, 2).join(' ')}
-                <br />
-                <motion.span 
+            {/* Right Side - Content dengan pointer-events-auto */}
+            <motion.div 
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="text-center lg:text-left pointer-events-auto"
+            >
+              <div>
+                <motion.h1 
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.8 }}
-                  className="font-semibold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent"
+                  transition={{ duration: 0.5, delay: 0.6 }}
+                  className="text-5xl md:text-6xl font-light mb-6 tracking-tight"
                 >
-                  {personalInfo.name.split(' ').slice(2).join(' ')}
-                </motion.span>
-              </motion.h1>
-              <motion.p 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 1 }}
-                className="text-xl md:text-2xl text-gray-600 mb-8 font-light"
-              >
-                {personalInfo.title}
-              </motion.p>
-              <motion.p 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 1.2 }}
-                className="text-lg text-gray-500 mb-12 max-w-xl leading-relaxed"
-              >
-                {personalInfo.description}
-              </motion.p>
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 1.4 }}
-                className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
-              >
-                <Button 
-                  onClick={() => scrollToSection('about')}
-                  variant="default"
-                  className="group bg-gray-900 hover:bg-gray-800 transition-all duration-300"
+                  {personalInfo.name.split(' ').slice(0, 2).join(' ')}
+                  <br />
+                  <motion.span 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.8 }}
+                    className="font-semibold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent"
+                  >
+                    {personalInfo.name.split(' ').slice(2).join(' ')}
+                  </motion.span>
+                </motion.h1>
+                <motion.p 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 1 }}
+                  className="text-xl md:text-2xl text-gray-600 mb-8 font-light"
                 >
-                  Learn More
-                  <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-200" />
-                </Button>
-                <Button 
-                  onClick={() => scrollToSection('projects')}
-                  variant="outline"
-                  className="group border-gray-300 hover:border-gray-900 transition-all duration-300"
+                  {personalInfo.title}
+                </motion.p>
+                <motion.p 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 1.2 }}
+                  className="text-lg text-gray-500 mb-12 max-w-xl leading-relaxed"
                 >
-                  View Projects
-                  <ExternalLink className="ml-2 h-4 w-4 group-hover:scale-110 transition-transform duration-200" />
-                </Button>
-              </motion.div>
-            </div>
-          </motion.div>
+                  {personalInfo.description}
+                </motion.p>
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 1.4 }}
+                  className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
+                >
+                  <Button 
+                    onClick={() => scrollToSection('about')}
+                    variant="default"
+                    className="group bg-gray-900 hover:bg-gray-800 transition-all duration-300"
+                  >
+                    Learn More
+                    <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-200" />
+                  </Button>
+                  <Button
+                    onClick={() => scrollToSection('projects')}
+                    variant="outline"
+                    className="group border-gray-300 hover:border-gray-900 transition-all duration-300"
+                  >
+                    View Projects
+                    <ExternalLink className="ml-2 h-4 w-4 group-hover:scale-110 transition-transform duration-200" />
+                  </Button>
+                </motion.div>
+              </div>
+            </motion.div>
+          </div>
         </div>
       </section>
 
