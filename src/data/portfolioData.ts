@@ -1,4 +1,4 @@
-// Portfolio Data Configuration
+                                // Portfolio Data Configuration
 // Edit file ini untuk mengupdate informasi portofolio
 
 export const personalInfo = {
@@ -6,12 +6,12 @@ export const personalInfo = {
   title: "System Development Enthusiast",
   description: "Information Systems student passionate about building innovative web and mobile solutions",
   photo: "/src/assets/images/habibie.png",
-  email: "your.email@example.com",
+  email: "nouvalhabibie18@gmail.com",
   phone: "+62 123 4567 8900",
   location: "Padang, Indonesia",
-  linkedin: "https://linkedin.com/in/yourprofile",
+  linkedin: "https://www.linkedin.com/in/nouvalhabibie/",
   github: "https://github.com/habiboys",
-  instagram: "https://instagram.com/yourusername"
+  instagram: "https://www.instagram.com/nuval18_/"
 };
 
 export const aboutMe = {
@@ -32,92 +32,84 @@ export const experiences = [
   {
     title: "Full Stack Developer",
     organization: "Tech Company",
-    location: "Jakarta, Indonesia",
-    type: "Full Time",
     period: "2023 - Present",
-    description: "Led development of web applications using modern technologies.",
-    detailedDescription: "As a Full Stack Developer, I was responsible for developing and maintaining web applications using React, Node.js, and PostgreSQL. Led a team of 3 developers and implemented agile methodologies.",
-    image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&h=400&fit=crop",
-    companyLogo: "https://images.unsplash.com/photo-1599305445671-ac291c95aaa9?w=200&h=200&fit=crop",
-    responsibilities: [
-      "Developed and maintained web applications using React and Node.js",
-      "Implemented RESTful APIs and database design",
-      "Led team meetings and code reviews",
-      "Optimized application performance and user experience",
-      "Mentored junior developers and conducted technical interviews"
-    ],
-    technologies: ["React", "Node.js", "PostgreSQL", "TypeScript", "AWS"],
-    achievements: [
-      "Reduced application load time by 40%",
-      "Implemented automated testing, achieving 85% coverage",
-      "Successfully delivered 5 major features ahead of schedule",
-      "Received Employee of the Month award for outstanding performance"
-    ],
-    projects: [
-      "E-commerce Platform Revamp",
-      "Real-time Analytics Dashboard",
-      "Customer Management System"
-    ],
-    skills: {
-      technical: ["Frontend Development", "Backend Development", "Database Design", "Cloud Services", "API Development"],
-      soft: ["Leadership", "Problem Solving", "Team Collaboration", "Communication", "Agile Methodologies"]
-    }
+    description: "Led development of web applications using modern technologies including React, Node.js, and PostgreSQL.",
+    image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&h=400&fit=crop"
   },
   {
     title: "Software Engineer Intern",
     organization: "Startup X",
-    location: "Bandung, Indonesia",
-    type: "Internship",
     period: "Jan 2023 - Jun 2023",
-    description: "Contributed to the development of innovative mobile applications.",
-    detailedDescription: "During my internship, I worked on developing mobile applications using React Native and participated in the complete software development lifecycle. Gained hands-on experience in modern development practices and agile methodologies.",
-    image: "https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?w=800&h=400&fit=crop",
-    companyLogo: "https://images.unsplash.com/photo-1572044162444-ad60f128bdea?w=200&h=200&fit=crop",
-    responsibilities: [
-      "Developed mobile application features using React Native",
-      "Collaborated with the design team for UI/UX implementation",
-      "Participated in code reviews and testing",
-      "Assisted in API integration and documentation"
-    ],
-    technologies: ["React Native", "JavaScript", "Firebase", "Git"],
-    achievements: [
-      "Developed key features that increased user engagement by 25%",
-      "Contributed to reducing app crash rate by 60%",
-      "Received recognition for best intern performance"
-    ],
-    projects: [
-      "Food Delivery App",
-      "Social Media Integration",
-      "Push Notification System"
-    ],
-    skills: {
-      technical: ["Mobile Development", "Version Control", "UI/UX Implementation", "Testing"],
-      soft: ["Time Management", "Quick Learning", "Teamwork", "Attention to Detail"]
-    }
+    description: "Contributed to the development of innovative mobile applications using React Native and participated in the complete software development lifecycle.",
+    image: "https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?w=800&h=400&fit=crop"
+  },
+  {
+    title: "Frontend Developer",
+    organization: "Digital Agency",
+    period: "Jun 2022 - Dec 2022",
+    description: "Developed responsive web interfaces and collaborated with design teams to create engaging user experiences.",
+    image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&h=400&fit=crop"
   }
 ];
 
 export const projects = [
   {
     id: 1,
-    title: "Web-based Asset Management System",
-    description: "A comprehensive system for tracking and managing digital and physical assets with real-time monitoring.",
-    tech: ["Laravel", "MySQL", "Bootstrap"],
-    previewImage: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=400&h=250&fit=crop",
-    detailedDescription: "This comprehensive asset management system provides organizations with powerful tools to track, monitor, and manage both digital and physical assets. The system features real-time asset tracking, automated depreciation calculations, maintenance scheduling, and detailed reporting capabilities. Built with Laravel for robust backend functionality and Bootstrap for responsive design.",
+    title: "Sistem Informasi Peminjaman Sarana & Prasarana Universitas Andalas",
+    description: "Sistem Informasi untuk mengelola peminjaman sarana dan prasarana dilingkungan Universitas Andalas.",
+    tech: ["Laravel", "MySQL", "Pusher", "Flowbite"],
+    previewImage: "/src/assets/images/project/simsapras/cover.png",
+    detailedDescription: "Sistem informasi komprehensif untuk mengelola peminjaman sarana dan prasarana di lingkungan Universitas Andalas. Sistem ini menyediakan fitur peminjaman real-time, manajemen admin, dan pelaporan yang detail untuk memudahkan pengelolaan aset universitas.",
     features: [
-      "Real-time asset tracking and monitoring",
-      "Automated depreciation calculations",
-      "Maintenance scheduling and alerts",
-      "Comprehensive reporting dashboard",
-      "Multi-user access control",
-      "Asset lifecycle management"
+      "Peminjaman Sarana & Prasarana",
+      "Manajemen Admin",
+      "Pengelolaan Peminjaman",
+      "Dashboard & Pelaporan",
+      "Pengelolaan Sarana & Prasarana",
+      "Notifikasi Real-time"
     ],
     images: [
-      "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d",
-      "https://images.unsplash.com/photo-1461749280684-dccba630e2f6",
-      "https://images.unsplash.com/photo-1498050108023-c5249f4df085"
-    ]
+      "/src/assets/images/project/simsapras/cover.png",
+      "/src/assets/images/project/simsapras/peminjaman.png",
+      "/src/assets/images/project/simsapras/dashboard.png",
+      "/src/assets/images/project/simsapras/kalenderadmin.png",
+      "/src/assets/images/project/simsapras/sarana.png",
+      "/src/assets/images/project/simsapras/detailgedung.png"
+    ],
+    liveDemo: "https://simsapras.unand.ac.id/",
+    // sourceCode: "https://github.com/habiboys/simsapras-unand"
+  },
+  {
+    id: 3,
+    title: "PLANMAX",
+    description: "AI Based Project Management For Smarter Collaboration.",
+    tech: ["React", "Nextjs","FastAPI", "PostgreSQL"],
+    previewImage: "src/assets/images/project/planmax/landing-page.png",
+    detailedDescription: "An intelligent project management solution that combines AI-powered task scheduling with comprehensive team collaboration tools. The system automatically optimizes project timelines, allocates resources efficiently, and provides real-time project insights to ensure successful project delivery.",
+features: [
+  "AI-powered task scheduling",
+  "Resource allocation optimization",
+  "Team collaboration tools",
+  "Real-time project tracking",
+  "Gantt chart visualization",
+  "Performance analytics and reporting",
+  "Machine learning for blocker detection and timeline prediction",
+  "Interactive Gantt-based timeline builder with AI prompts",
+  "Collaborative task management with team communication",
+  "Integrated project and task dependency mapping"
+],
+
+    images: [
+      "src/assets/images/project/planmax/landing-page.png",
+      "src/assets/images/project/planmax/all-project.png",
+      "src/assets/images/project/planmax/detail-project.png",
+      "src/assets/images/project/planmax/all-task.png",
+      "src/assets/images/project/planmax/gantt-chart.png",
+       "src/assets/images/project/planmax/ai-creator.png",
+     
+    ],
+    liveDemo: "https://project-planner-demo.com",
+    sourceCode: ""
   },
   {
     id: 2,
@@ -138,28 +130,9 @@ export const projects = [
       "https://images.unsplash.com/photo-1531297484001-80022131f5a1",
       "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b",
       "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d"
-    ]
-  },
-  {
-    id: 3,
-    title: "Smart Project Planner",
-    description: "Intelligent project management tool with automated task scheduling and team collaboration features.",
-    tech: ["React", "Express", "PostgreSQL"],
-    previewImage: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400&h=250&fit=crop",
-    detailedDescription: "An intelligent project management solution that combines AI-powered task scheduling with comprehensive team collaboration tools. The system automatically optimizes project timelines, allocates resources efficiently, and provides real-time project insights to ensure successful project delivery.",
-    features: [
-      "AI-powered task scheduling",
-      "Resource allocation optimization",
-      "Team collaboration tools",
-      "Real-time project tracking",
-      "Gantt chart visualization",
-      "Performance analytics and reporting"
     ],
-    images: [
-      "https://images.unsplash.com/photo-1498050108023-c5249f4df085",
-      "https://images.unsplash.com/photo-1461749280684-dccba630e2f6",
-      "https://images.unsplash.com/photo-1531297484001-80022131f5a1"
-    ]
+    liveDemo: "",
+    sourceCode: "https://github.com/habiboys/financial-tracker"
   }
 ];
 

@@ -228,20 +228,26 @@ const Projects = () => {
                     </div>
 
                     <div className="flex flex-col space-y-3">
-                      <Button 
-                        variant="default" 
-                        className="w-full bg-gray-900 hover:bg-gray-800 transition-all duration-300"
-                      >
-                        View Live Demo
-                        <ExternalLink className="ml-2 h-4 w-4" />
-                      </Button>
-                      <Button 
-                        variant="outline" 
-                        className="w-full border-gray-300 hover:border-gray-900 transition-all duration-300"
-                      >
-                        View Source Code
-                        <Github className="ml-2 h-4 w-4" />
-                      </Button>
+                      {selectedProject.liveDemo && (
+                        <Button 
+                          variant="default" 
+                          className="w-full bg-gray-900 hover:bg-gray-800 transition-all duration-300"
+                          onClick={() => window.open(selectedProject.liveDemo, '_blank')}
+                        >
+                          View Live Demo
+                          <ExternalLink className="ml-2 h-4 w-4" />
+                        </Button>
+                      )}
+                      {selectedProject.sourceCode && (
+                        <Button 
+                          variant="outline" 
+                          className="w-full border-gray-300 hover:border-gray-900 transition-all duration-300"
+                          onClick={() => window.open(selectedProject.sourceCode, '_blank')}
+                        >
+                          View Source Code
+                          <Github className="ml-2 h-4 w-4" />
+                        </Button>
+                      )}
                     </div>
                   </div>
                 </div>

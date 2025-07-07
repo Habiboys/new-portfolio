@@ -15,8 +15,6 @@ import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 
 const Experience = () => {
-  const [selectedExperience, setSelectedExperience] = useState(null);
-
   return (
     <main className="bg-white min-h-screen">
       <Navbar />
@@ -59,10 +57,14 @@ const Experience = () => {
                 >
                   <div className="absolute left-8 -translate-x-1/2 w-4 h-4 rounded-full bg-white border-2 border-gray-300 group-hover:border-gray-600 group-hover:scale-125 transition-all duration-300"></div>
                   
-                  <Card 
-                    className="ml-16 group-hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden cursor-pointer"
-                    onClick={() => setSelectedExperience(exp)}
-                  >
+                  <Card className="ml-16 group-hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden">
+                    <div className="aspect-video overflow-hidden">
+                      <img 
+                        src={exp.image} 
+                        alt={exp.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    </div>
                     <CardContent className="p-8">
                       <div className="space-y-4">
                         <div className="flex justify-between items-start flex-wrap gap-4">
@@ -71,7 +73,6 @@ const Experience = () => {
                               {exp.title}
                             </h3>
                             <p className="text-gray-600 font-medium">{exp.organization}</p>
-                            <p className="text-sm text-gray-500">{exp.location} • {exp.type}</p>
                           </div>
                           <span className="text-sm text-gray-500 bg-gray-100 px-4 py-1.5 rounded-full group-hover:bg-gray-200 transition-colors duration-200">
                             {exp.period}
@@ -91,157 +92,7 @@ const Experience = () => {
         </div>
       </section>
 
-      {/* Experience Modal */}
-      <Dialog open={!!selectedExperience} onOpenChange={() => setSelectedExperience(null)}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-4 md:p-6">
-          {selectedExperience && (
-            <>
-              <DialogHeader>
-                <DialogTitle className="text-xl md:text-2xl font-semibold">
-                  {selectedExperience.title}
-                </DialogTitle>
-                <DialogDescription>
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mt-2">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-full overflow-hidden">
-                        <img 
-                          src={selectedExperience.companyLogo} 
-                          alt={selectedExperience.organization}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                      <div>
-                        <p className="text-gray-600 font-medium">
-                          {selectedExperience.organization}
-                        </p>
-                        <div className="flex items-center gap-2 text-sm text-gray-500">
-                          <span>{selectedExperience.location}</span>
-                          <span>•</span>
-                          <span>{selectedExperience.type}</span>
-                        </div>
-                      </div>
-                    </div>
-                    <span className="text-sm text-gray-500 bg-gray-100 px-4 py-1.5 rounded-full self-start md:self-center">
-                      {selectedExperience.period}
-                    </span>
-                  </div>
-                </DialogDescription>
-              </DialogHeader>
-              
-              <div className="space-y-6 mt-6">
-                {/* Featured Image */}
-                <div className="aspect-[2/1] rounded-lg overflow-hidden">
-                  <img 
-                    src={selectedExperience.image} 
-                    alt={`${selectedExperience.title} at ${selectedExperience.organization}`}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-                  {/* Main Content - Left Side */}
-                  <div className="md:col-span-2 space-y-6">
-                    <div>
-                      <h3 className="text-lg font-semibold mb-3">Overview</h3>
-                      <p className="text-gray-700 leading-relaxed">
-                        {selectedExperience.detailedDescription}
-                      </p>
-                    </div>
-
-                    <div>
-                      <h3 className="text-lg font-semibold mb-3">Key Responsibilities</h3>
-                      <ul className="space-y-2">
-                        {selectedExperience.responsibilities?.map((resp, index) => (
-                          <li key={index} className="flex items-start">
-                            <div className="mr-3 mt-1.5">
-                              <div className="w-1.5 h-1.5 rounded-full bg-gray-400"></div>
-                            </div>
-                            <p className="text-gray-700">{resp}</p>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    <div>
-                      <h3 className="text-lg font-semibold mb-3">Notable Projects</h3>
-                      <ul className="space-y-2">
-                        {selectedExperience.projects?.map((project, index) => (
-                          <li key={index} className="flex items-start">
-                            <div className="mr-3 mt-1.5">
-                              <div className="w-1.5 h-1.5 rounded-full bg-gray-400"></div>
-                            </div>
-                            <p className="text-gray-700">{project}</p>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    <div>
-                      <h3 className="text-lg font-semibold mb-3">Key Achievements</h3>
-                      <ul className="space-y-2">
-                        {selectedExperience.achievements?.map((achievement, index) => (
-                          <li key={index} className="flex items-start">
-                            <div className="mr-3 mt-1.5">
-                              <div className="w-1.5 h-1.5 rounded-full bg-gray-400"></div>
-                            </div>
-                            <p className="text-gray-700">{achievement}</p>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-
-                  {/* Sidebar - Right Side */}
-                  <div className="space-y-6">
-                    <div>
-                      <h3 className="text-lg font-semibold mb-3">Technical Skills</h3>
-                      <div className="flex flex-wrap gap-2">
-                        {selectedExperience.skills?.technical.map((skill, index) => (
-                          <span 
-                            key={index}
-                            className="px-3 py-1.5 bg-gray-100 text-gray-700 text-sm rounded-full"
-                          >
-                            {skill}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div>
-                      <h3 className="text-lg font-semibold mb-3">Soft Skills</h3>
-                      <div className="flex flex-wrap gap-2">
-                        {selectedExperience.skills?.soft.map((skill, index) => (
-                          <span 
-                            key={index}
-                            className="px-3 py-1.5 bg-gray-100 text-gray-700 text-sm rounded-full"
-                          >
-                            {skill}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div>
-                      <h3 className="text-lg font-semibold mb-3">Technologies Used</h3>
-                      <div className="flex flex-wrap gap-2">
-                        {selectedExperience.technologies?.map((tech, index) => (
-                          <span 
-                            key={index}
-                            className="px-3 py-1.5 bg-gray-100 text-gray-700 text-sm rounded-full"
-                          >
-                            {tech}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </>
-          )}
-        </DialogContent>
-      </Dialog>
-    </main>
+      </main>
   );
 };
 

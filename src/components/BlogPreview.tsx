@@ -2,16 +2,19 @@ import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 import { blogPosts } from "@/data/portfolioData";
 
 export const BlogPreview = () => {
   return (
     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
       {blogPosts.slice(0, 3).map((post, index) => (
-        <Card 
+        <Link 
           key={post.id} 
-          className="group border-gray-200 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer overflow-hidden"
+          to={`/blog/${post.id}`}
+          className="group block"
         >
+          <Card className="border-gray-200 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden">
           <div className="aspect-video overflow-hidden">
             <img 
               src={post.image} 
@@ -48,6 +51,7 @@ export const BlogPreview = () => {
             </div>
           </CardContent>
         </Card>
+        </Link>
       ))}
     </div>
   );
