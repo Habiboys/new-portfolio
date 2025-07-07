@@ -11,12 +11,15 @@ import {
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import habibiePhoto from "../assets/images/habibie.png";
 import { personalInfo, aboutMe, techStack, experiences, projects, contactInfo } from "@/data/portfolioData";
 import { Boxes } from "@/components/ui/background-boxes";
 import { Gallery } from "@/components/Gallery";
 import { Blog } from "@/components/Blog";
+import { BlogPreview } from "@/components/BlogPreview";
 import { Vortex } from "@/components/ui/vortex";
+import Navbar from "@/components/Navbar";
 
 const Index = () => {
   const [selectedProject, setSelectedProject] = useState(null);
@@ -54,159 +57,7 @@ const Index = () => {
 
   return (
     <main className="bg-white">
-      {/* Navbar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex items-center justify-between h-16">
-            {/* Logo/Brand */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5 }}
-              className="flex-shrink-0"
-            >
-              <span className="text-xl font-medium bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
-                My Portfolio
-              </span>
-            </motion.div>
-
-            {/* Desktop Navigation Links */}
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="hidden md:flex items-center space-x-8"
-            >
-              <button
-                onClick={() => scrollToSection('about')}
-                className="text-gray-600 hover:text-gray-900 transition-colors duration-200"
-              >
-                About
-              </button>
-              <button
-                onClick={() => scrollToSection('experience')}
-                className="text-gray-600 hover:text-gray-900 transition-colors duration-200"
-              >
-                Experience
-              </button>
-              <button
-                onClick={() => scrollToSection('projects')}
-                className="text-gray-600 hover:text-gray-900 transition-colors duration-200"
-              >
-                Projects
-              </button>
-              <button
-                onClick={() => scrollToSection('blog')}
-                className="text-gray-600 hover:text-gray-900 transition-colors duration-200"
-              >
-                Blog
-              </button>
-              <button
-                onClick={() => scrollToSection('gallery')}
-                className="text-gray-600 hover:text-gray-900 transition-colors duration-200"
-              >
-                Gallery
-              </button>
-              <button
-                onClick={() => scrollToSection('contact')}
-                className="text-gray-600 hover:text-gray-900 transition-colors duration-200"
-              >
-                Contact
-              </button>
-            </motion.div>
-
-            {/* Mobile Menu Button */}
-            <motion.button
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5 }}
-              className="md:hidden p-2 rounded-md hover:bg-gray-100"
-              onClick={() => {
-                const mobileMenu = document.getElementById('mobile-menu');
-                if (mobileMenu) {
-                  mobileMenu.classList.toggle('hidden');
-                }
-              }}
-            >
-              <svg
-                className="h-6 w-6"
-                fill="none"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path d="M4 6h16M4 12h16M4 18h16"></path>
-              </svg>
-            </motion.button>
-          </div>
-
-          {/* Mobile Menu */}
-          <motion.div
-            id="mobile-menu"
-            initial={false}
-            className="hidden md:hidden"
-          >
-            <div className="px-2 pt-2 pb-3 space-y-1">
-              <button
-                onClick={() => {
-                  scrollToSection('about');
-                  document.getElementById('mobile-menu')?.classList.add('hidden');
-                }}
-                className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
-              >
-                About
-              </button>
-              <button
-                onClick={() => {
-                  scrollToSection('experience');
-                  document.getElementById('mobile-menu')?.classList.add('hidden');
-                }}
-                className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
-              >
-                Experience
-              </button>
-              <button
-                onClick={() => {
-                  scrollToSection('projects');
-                  document.getElementById('mobile-menu')?.classList.add('hidden');
-                }}
-                className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
-              >
-                Projects
-              </button>
-              <button
-                onClick={() => {
-                  scrollToSection('blog');
-                  document.getElementById('mobile-menu')?.classList.add('hidden');
-                }}
-                className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
-              >
-                Blog
-              </button>
-              <button
-                onClick={() => {
-                  scrollToSection('gallery');
-                  document.getElementById('mobile-menu')?.classList.add('hidden');
-                }}
-                className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
-              >
-                Gallery
-              </button>
-              <button
-                onClick={() => {
-                  scrollToSection('contact');
-                  document.getElementById('mobile-menu')?.classList.add('hidden');
-                }}
-                className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
-              >
-                Contact
-              </button>
-            </div>
-          </motion.div>
-        </div>
-      </nav>
+      <Navbar />
 
       {/* Add margin-top to hero section to account for fixed navbar */}
       <div className="h-16"></div>
@@ -358,12 +209,20 @@ const Index = () => {
       {/* Experience Section */}
       <section id="experience" className="py-20 px-6 relative">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-light mb-12 text-center">Experience</h2>
+          <div className="flex justify-between items-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-light">Recent Experience</h2>
+            <Link to="/experience">
+              <Button variant="outline" className="group">
+                View All
+                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-200" />
+              </Button>
+            </Link>
+          </div>
           <div className="relative">
             <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-gray-200 via-gray-300 to-gray-200"></div>
             
             <div className="space-y-12">
-              {experiences.map((exp, index) => (
+              {experiences.slice(0, 3).map((exp, index) => (
                 <div key={index} className="relative group">
                   <div className="absolute left-8 -translate-x-1/2 w-4 h-4 rounded-full bg-white border-2 border-gray-300 group-hover:border-gray-600 group-hover:scale-125 transition-all duration-300"></div>
                   
@@ -552,9 +411,17 @@ const Index = () => {
       {/* Projects Section */}
       <section id="projects" className="py-20 px-6 bg-gray-50">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-light mb-12 text-center">Projects</h2>
+          <div className="flex justify-between items-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-light">Recent Projects</h2>
+            <Link to="/projects">
+              <Button variant="outline" className="group">
+                View All
+                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-200" />
+              </Button>
+            </Link>
+          </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {projects.map((project, index) => (
+            {projects.slice(0, 3).map((project, index) => (
               <Card 
                 key={index} 
                 className="group border-gray-200 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer overflow-hidden flex flex-col"
@@ -736,8 +603,16 @@ const Index = () => {
       {/* Blog Section */}
       <section id="blog" className="py-20 px-6 bg-white">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-light mb-12 text-center">Blog</h2>
-          <Blog />
+          <div className="flex justify-between items-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-light">Recent Posts</h2>
+            <Link to="/blog">
+              <Button variant="outline" className="group">
+                View All
+                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-200" />
+              </Button>
+            </Link>
+          </div>
+          <BlogPreview />
         </div>
       </section>
 

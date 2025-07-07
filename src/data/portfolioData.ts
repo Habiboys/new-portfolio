@@ -163,6 +163,64 @@ export const projects = [
   }
 ];
 
+export const blogPosts = [
+  {
+    id: 1,
+    title: "Building Scalable Web Applications with React and Node.js",
+    excerpt: "Learn how to create robust, scalable web applications using modern JavaScript technologies and best practices.",
+    content: "Full blog content here...",
+    date: "2024-01-15",
+    readTime: "5 min read",
+    category: "Web Development",
+    image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=400&h=250&fit=crop",
+    tags: ["React", "Node.js", "JavaScript", "Web Development"]
+  },
+  {
+    id: 2,
+    title: "The Future of Cloud Computing in Software Development",
+    excerpt: "Exploring how cloud technologies are reshaping the way we build and deploy applications in the modern era.",
+    content: "Full blog content here...",
+    date: "2024-01-10",
+    readTime: "7 min read",
+    category: "Cloud Computing",
+    image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400&h=250&fit=crop",
+    tags: ["Cloud Computing", "AWS", "DevOps", "Technology"]
+  },
+  {
+    id: 3,
+    title: "Best Practices for Database Design and Optimization",
+    excerpt: "Essential tips and strategies for designing efficient databases that scale with your application's growth.",
+    content: "Full blog content here...",
+    date: "2024-01-05",
+    readTime: "6 min read",
+    category: "Database",
+    image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=400&h=250&fit=crop",
+    tags: ["Database", "SQL", "Performance", "Optimization"]
+  },
+  {
+    id: 4,
+    title: "Introduction to Machine Learning for Web Developers",
+    excerpt: "A beginner-friendly guide to understanding and implementing machine learning concepts in web applications.",
+    content: "Full blog content here...",
+    date: "2023-12-28",
+    readTime: "8 min read",
+    category: "Machine Learning",
+    image: "https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=400&h=250&fit=crop",
+    tags: ["Machine Learning", "AI", "Python", "Web Development"]
+  },
+  {
+    id: 5,
+    title: "Modern CSS Techniques for Better User Interfaces",
+    excerpt: "Discover the latest CSS features and techniques to create stunning, responsive user interfaces.",
+    content: "Full blog content here...",
+    date: "2023-12-20",
+    readTime: "4 min read",
+    category: "Frontend",
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=250&fit=crop",
+    tags: ["CSS", "Frontend", "UI/UX", "Web Design"]
+  }
+];
+
 export const contactInfo = {
   title: "Let's Connect",
   description: "I'm always open to discussing new opportunities, interesting projects, or just having a chat about technology.",
