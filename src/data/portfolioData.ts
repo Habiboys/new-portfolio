@@ -1,11 +1,30 @@
                                 // Portfolio Data Configuration
 // Edit file ini untuk mengupdate informasi portofolio
 
+// Import gambar yang diperlukan
+import habibiePhoto from "../assets/images/habibie.png";
+
+// Import gambar project simsapras
+import simsaprasCover from "../assets/images/project/simsapras/cover.png";
+import simsaprasPeminjaman from "../assets/images/project/simsapras/peminjaman.png";
+import simsaprasDashboard from "../assets/images/project/simsapras/dashboard.png";
+import simsaprasKalender from "../assets/images/project/simsapras/kalenderadmin.png";
+import simsaprasSarana from "../assets/images/project/simsapras/sarana.png";
+import simsaprasDetail from "../assets/images/project/simsapras/detailgedung.png";
+
+// Import gambar project planmax
+import planmaxLanding from "../assets/images/project/planmax/landing-page.png";
+import planmaxAllProject from "../assets/images/project/planmax/all-project.png";
+import planmaxDetailProject from "../assets/images/project/planmax/detail-project.png";
+import planmaxAllTask from "../assets/images/project/planmax/all-task.png";
+import planmaxGantt from "../assets/images/project/planmax/gantt-chart.png";
+import planmaxAI from "../assets/images/project/planmax/ai-creator.png";
+
 export const personalInfo = {
   name: "Muhammad Nouval Habibie",
   title: "System Development Enthusiast",
   description: "Information Systems student passionate about building innovative web and mobile solutions",
-  photo: "/src/assets/images/habibie.png",
+  photo: habibiePhoto,
   email: "nouvalhabibie18@gmail.com",
   phone: "+62 123 4567 8900",
   location: "Padang, Indonesia",
@@ -58,7 +77,7 @@ export const projects = [
     title: "Sistem Informasi Peminjaman Sarana & Prasarana Universitas Andalas",
     description: "Sistem Informasi untuk mengelola peminjaman sarana dan prasarana dilingkungan Universitas Andalas.",
     tech: ["Laravel", "MySQL", "Pusher", "Flowbite"],
-    previewImage: "/src/assets/images/project/simsapras/cover.png",
+    previewImage: simsaprasCover,
     detailedDescription: "Sistem informasi komprehensif untuk mengelola peminjaman sarana dan prasarana di lingkungan Universitas Andalas. Sistem ini menyediakan fitur peminjaman real-time, manajemen admin, dan pelaporan yang detail untuk memudahkan pengelolaan aset universitas.",
     features: [
       "Peminjaman Sarana & Prasarana",
@@ -69,50 +88,48 @@ export const projects = [
       "Notifikasi Real-time"
     ],
     images: [
-      "/src/assets/images/project/simsapras/cover.png",
-      "/src/assets/images/project/simsapras/peminjaman.png",
-      "/src/assets/images/project/simsapras/dashboard.png",
-      "/src/assets/images/project/simsapras/kalenderadmin.png",
-      "/src/assets/images/project/simsapras/sarana.png",
-      "/src/assets/images/project/simsapras/detailgedung.png"
+      simsaprasCover,
+      simsaprasPeminjaman,
+      simsaprasDashboard,
+      simsaprasKalender,
+      simsaprasSarana,
+      simsaprasDetail
     ],
     liveDemo: "https://simsapras.unand.ac.id/",
-    // sourceCode: "https://github.com/habiboys/simsapras-unand"
+    sourceCode: ""
   },
   {
-    id: 3,
+    id: 2,
     title: "PLANMAX",
     description: "AI Based Project Management For Smarter Collaboration.",
     tech: ["React", "Nextjs","FastAPI", "PostgreSQL"],
-    previewImage: "src/assets/images/project/planmax/landing-page.png",
+    previewImage: planmaxLanding,
     detailedDescription: "An intelligent project management solution that combines AI-powered task scheduling with comprehensive team collaboration tools. The system automatically optimizes project timelines, allocates resources efficiently, and provides real-time project insights to ensure successful project delivery.",
-features: [
-  "AI-powered task scheduling",
-  "Resource allocation optimization",
-  "Team collaboration tools",
-  "Real-time project tracking",
-  "Gantt chart visualization",
-  "Performance analytics and reporting",
-  "Machine learning for blocker detection and timeline prediction",
-  "Interactive Gantt-based timeline builder with AI prompts",
-  "Collaborative task management with team communication",
-  "Integrated project and task dependency mapping"
-],
-
+    features: [
+      "AI-powered task scheduling",
+      "Resource allocation optimization",
+      "Team collaboration tools",
+      "Real-time project tracking",
+      "Gantt chart visualization",
+      "Performance analytics and reporting",
+      "Machine learning for blocker detection and timeline prediction",
+      "Interactive Gantt-based timeline builder with AI prompts",
+      "Collaborative task management with team communication",
+      "Integrated project and task dependency mapping"
+    ],
     images: [
-      "src/assets/images/project/planmax/landing-page.png",
-      "src/assets/images/project/planmax/all-project.png",
-      "src/assets/images/project/planmax/detail-project.png",
-      "src/assets/images/project/planmax/all-task.png",
-      "src/assets/images/project/planmax/gantt-chart.png",
-       "src/assets/images/project/planmax/ai-creator.png",
-     
+      planmaxLanding,
+      planmaxAllProject,
+      planmaxDetailProject,
+      planmaxAllTask,
+      planmaxGantt,
+      planmaxAI
     ],
     liveDemo: "https://project-planner-demo.com",
     sourceCode: ""
   },
   {
-    id: 2,
+    id: 3,
     title: "Financial Tracking App",
     description: "Personal finance management application with budget tracking and expense categorization.",
     tech: ["React", "Node.js", "MongoDB"],

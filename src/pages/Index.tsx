@@ -12,7 +12,6 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import habibiePhoto from "../assets/images/habibie.png";
 import { personalInfo, aboutMe, techStack, experiences, projects, contactInfo } from "@/data/portfolioData";
 import { Boxes } from "@/components/ui/background-boxes";
 import { Gallery } from "@/components/Gallery";
@@ -88,7 +87,7 @@ const Index = () => {
                   className="aspect-[4/5] rounded-lg overflow-hidden"
                 >
                   <img 
-                    src={habibiePhoto}
+                    src={personalInfo.photo}
                     alt="Muhammad Nouval Habibie"
                     className="w-full h-full object-contain scale-110"
                   />
