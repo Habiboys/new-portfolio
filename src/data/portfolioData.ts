@@ -1,30 +1,11 @@
                                 // Portfolio Data Configuration
 // Edit file ini untuk mengupdate informasi portofolio
 
-// Import gambar yang diperlukan
-import habibiePhoto from "../assets/images/habibie.png";
-
-// Import gambar project simsapras
-import simsaprasCover from "../assets/images/project/simsapras/cover.png";
-import simsaprasPeminjaman from "../assets/images/project/simsapras/peminjaman.png";
-import simsaprasDashboard from "../assets/images/project/simsapras/dashboard.png";
-import simsaprasKalender from "../assets/images/project/simsapras/kalenderadmin.png";
-import simsaprasSarana from "../assets/images/project/simsapras/sarana.png";
-import simsaprasDetail from "../assets/images/project/simsapras/detailgedung.png";
-
-// Import gambar project planmax
-import planmaxLanding from "../assets/images/project/planmax/landing-page.png";
-import planmaxAllProject from "../assets/images/project/planmax/all-project.png";
-import planmaxDetailProject from "../assets/images/project/planmax/detail-project.png";
-import planmaxAllTask from "../assets/images/project/planmax/all-task.png";
-import planmaxGantt from "../assets/images/project/planmax/gantt-chart.png";
-import planmaxAI from "../assets/images/project/planmax/ai-creator.png";
-
 export const personalInfo = {
   name: "Muhammad Nouval Habibie",
   title: "System Development Enthusiast",
   description: "Information Systems student passionate about building innovative web and mobile solutions",
-  photo: habibiePhoto,
+  photo: "/images/habibie.png",
   email: "nouvalhabibie18@gmail.com",
   phone: "+62 123 4567 8900",
   location: "Padang, Indonesia",
@@ -77,7 +58,7 @@ export const projects = [
     title: "Sistem Informasi Peminjaman Sarana & Prasarana Universitas Andalas",
     description: "Sistem Informasi untuk mengelola peminjaman sarana dan prasarana dilingkungan Universitas Andalas.",
     tech: ["Laravel", "MySQL", "Pusher", "Flowbite"],
-    previewImage: simsaprasCover,
+    previewImage: "/images/project/simsapras/cover.png",
     detailedDescription: "Sistem informasi komprehensif untuk mengelola peminjaman sarana dan prasarana di lingkungan Universitas Andalas. Sistem ini menyediakan fitur peminjaman real-time, manajemen admin, dan pelaporan yang detail untuk memudahkan pengelolaan aset universitas.",
     features: [
       "Peminjaman Sarana & Prasarana",
@@ -88,12 +69,12 @@ export const projects = [
       "Notifikasi Real-time"
     ],
     images: [
-      simsaprasCover,
-      simsaprasPeminjaman,
-      simsaprasDashboard,
-      simsaprasKalender,
-      simsaprasSarana,
-      simsaprasDetail
+      "/images/project/simsapras/cover.png",
+      "/images/project/simsapras/peminjaman.png",
+      "/images/project/simsapras/dashboard.png",
+      "/images/project/simsapras/kalenderadmin.png",
+      "/images/project/simsapras/sarana.png",
+      "/images/project/simsapras/detailgedung.png"
     ],
     liveDemo: "https://simsapras.unand.ac.id/",
     sourceCode: ""
@@ -103,7 +84,7 @@ export const projects = [
     title: "PLANMAX",
     description: "AI Based Project Management For Smarter Collaboration.",
     tech: ["React", "Nextjs","FastAPI", "PostgreSQL"],
-    previewImage: planmaxLanding,
+    previewImage: "/images/project/planmax/landing-page.png",
     detailedDescription: "An intelligent project management solution that combines AI-powered task scheduling with comprehensive team collaboration tools. The system automatically optimizes project timelines, allocates resources efficiently, and provides real-time project insights to ensure successful project delivery.",
     features: [
       "AI-powered task scheduling",
@@ -118,12 +99,12 @@ export const projects = [
       "Integrated project and task dependency mapping"
     ],
     images: [
-      planmaxLanding,
-      planmaxAllProject,
-      planmaxDetailProject,
-      planmaxAllTask,
-      planmaxGantt,
-      planmaxAI
+      "/images/project/planmax/landing-page.png",
+      "/images/project/planmax/all-project.png",
+      "/images/project/planmax/detail-project.png",
+      "/images/project/planmax/all-task.png",
+      "/images/project/planmax/gantt-chart.png",
+      "/images/project/planmax/ai-creator.png"
     ],
     liveDemo: "https://project-planner-demo.com",
     sourceCode: ""

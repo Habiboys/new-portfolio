@@ -54,28 +54,24 @@ const cards = [
     id: 1,
     content: <SkeletonOne />,
     className: "md:col-span-2",
-    thumbnail:
-      "src/assets/images/neo.jpg",
+    thumbnail: "/images/neo.JPG",
   },
   {
     id: 2,
     content: <SkeletonTwo />,
     className: "col-span-1",
-    thumbnail:
-      "src/assets/images/blog/maxy.jpg",
+    thumbnail: "/images/blog/maxy.JPG",
   },
   {
     id: 3,
     content: <SkeletonThree />,
     className: "col-span-1",
-    thumbnail:
-      "src/assets/images/blog/solo.jpeg",
+    thumbnail: "/images/blog/solo.jpeg",
   },
   {
     id: 4,
     content: <SkeletonFour />,
     className: "md:col-span-2",
-    thumbnail:
-      "src/assets/images/blog/wincybertech.jpg",
+    thumbnail: "/images/blog/wincybertech.JPG",
   },
 ];
