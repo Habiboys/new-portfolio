@@ -14,6 +14,9 @@ import { motion } from "framer-motion";
 import habibiePhoto from "../assets/images/habibie.png";
 import { personalInfo, aboutMe, techStack, experiences, projects, contactInfo } from "@/data/portfolioData";
 import { Boxes } from "@/components/ui/background-boxes";
+import { Gallery } from "@/components/Gallery";
+import { Blog } from "@/components/Blog";
+import { Vortex } from "@/components/ui/vortex";
 
 const Index = () => {
   const [selectedProject, setSelectedProject] = useState(null);
@@ -93,6 +96,18 @@ const Index = () => {
                 Projects
               </button>
               <button
+                onClick={() => scrollToSection('blog')}
+                className="text-gray-600 hover:text-gray-900 transition-colors duration-200"
+              >
+                Blog
+              </button>
+              <button
+                onClick={() => scrollToSection('gallery')}
+                className="text-gray-600 hover:text-gray-900 transition-colors duration-200"
+              >
+                Gallery
+              </button>
+              <button
                 onClick={() => scrollToSection('contact')}
                 className="text-gray-600 hover:text-gray-900 transition-colors duration-200"
               >
@@ -160,6 +175,24 @@ const Index = () => {
                 className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
               >
                 Projects
+              </button>
+              <button
+                onClick={() => {
+                  scrollToSection('blog');
+                  document.getElementById('mobile-menu')?.classList.add('hidden');
+                }}
+                className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+              >
+                Blog
+              </button>
+              <button
+                onClick={() => {
+                  scrollToSection('gallery');
+                  document.getElementById('mobile-menu')?.classList.add('hidden');
+                }}
+                className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+              >
+                Gallery
               </button>
               <button
                 onClick={() => {
@@ -700,42 +733,65 @@ const Index = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Contact Section */}
-      <section id="contact" className="py-16 md:py-20 px-4 md:px-6">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-2xl md:text-4xl font-light mb-8 md:mb-12">{contactInfo.title}</h2>
-          <p className="text-base md:text-lg text-gray-700 mb-8 md:mb-12 max-w-2xl mx-auto leading-relaxed">
-            {contactInfo.description}
-          </p>
-          <div className="flex flex-col md:flex-row justify-center gap-4 md:space-x-6">
-            <Button 
-              variant="outline" 
-              size="lg"
-              className="group border-gray-300 hover:border-gray-900 transition-all duration-300 w-full md:w-auto"
-              onClick={() => window.open(`mailto:${personalInfo.email}`)}
-            >
-              <Mail className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform duration-200" />
-              Email Me
-            </Button>
-            <Button 
-              variant="ghost" 
-              size="lg"
-              className="group hover:bg-gray-100 transition-colors duration-200 w-full md:w-auto"
-              onClick={() => window.open(personalInfo.github, '_blank')}
-            >
-              <Github className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform duration-200" />
-              GitHub
-            </Button>
-            <Button 
-              variant="ghost" 
-              size="lg"
-              className="group hover:bg-gray-100 transition-colors duration-200 w-full md:w-auto"
-              onClick={() => window.open(personalInfo.linkedin, '_blank')}
-            >
-              <Linkedin className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform duration-200" />
-              LinkedIn
-            </Button>
-          </div>
+      {/* Blog Section */}
+      <section id="blog" className="py-20 px-6 bg-white">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-light mb-12 text-center">Blog</h2>
+          <Blog />
+        </div>
+      </section>
+
+      {/* Contact Section - Let's Connect */}
+      <section id="contact" className="relative overflow-hidden">
+        <div className="w-full h-[30rem] md:h-[35rem]">
+          <Vortex
+            backgroundColor="black"
+            className="flex items-center flex-col justify-center px-4 md:px-10 py-4 w-full h-full"
+          >
+            <h2 className="text-white text-2xl md:text-4xl font-light mb-8 md:mb-12 text-center">
+              {contactInfo.title}
+            </h2>
+            <p className="text-white/90 text-base md:text-lg mb-8 md:mb-12 max-w-2xl mx-auto leading-relaxed text-center">
+              {contactInfo.description}
+            </p>
+            <div className="flex flex-col md:flex-row justify-center gap-4 md:space-x-6">
+              <Button 
+                variant="outline" 
+                size="lg"
+                className="group border-white/30 hover:border-white bg-white/10 hover:bg-white/20 text-white transition-all duration-300 w-full md:w-auto backdrop-blur-sm"
+                onClick={() => window.open(`mailto:${personalInfo.email}`)}
+              >
+                <Mail className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform duration-200" />
+                Email Me
+              </Button>
+              <Button 
+                variant="outline" 
+                size="lg"
+                className="group border-white/30 hover:border-white bg-white/10 hover:bg-white/20 text-white transition-all duration-300 w-full md:w-auto backdrop-blur-sm"
+                onClick={() => window.open(personalInfo.github, '_blank')}
+              >
+                <Github className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform duration-200" />
+                GitHub
+              </Button>
+              <Button 
+                variant="outline" 
+                size="lg"
+                className="group border-white/30 hover:border-white bg-white/10 hover:bg-white/20 text-white transition-all duration-300 w-full md:w-auto backdrop-blur-sm"
+                onClick={() => window.open(personalInfo.linkedin, '_blank')}
+              >
+                <Linkedin className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform duration-200" />
+                LinkedIn
+              </Button>
+            </div>
+          </Vortex>
+        </div>
+      </section>
+
+      {/* Gallery Section */}
+      <section id="gallery" className="py-20 px-6 bg-white">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-light mb-12 text-center">Gallery</h2>
+          <Gallery />
         </div>
       </section>
 
