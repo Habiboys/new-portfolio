@@ -30,25 +30,25 @@ export const techStack = [
 
 export const experiences = [
   {
+    title: "Backend Developer",
+    organization: "PT Metro Indonesian Software",
+    period: "August 2025 - Present",
+    description: "Developing backend services for various projects.",
+    image: "/images/experience/metro.png"
+  },
+  {
     title: "Full Stack Developer",
-    organization: "Tech Company",
-    period: "2023 - Present",
-    description: "Led development of web applications using modern technologies including React, Node.js, and PostgreSQL.",
-    image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&h=400&fit=crop"
+    organization: "Neo Telemetri",
+    period: "Jan 2025 - Present",
+    description: "Manage project and build project",
+    image: "/images/experience/neo.png"
   },
   {
-    title: "Software Engineer Intern",
-    organization: "Startup X",
-    period: "Jan 2023 - Jun 2023",
-    description: "Contributed to the development of innovative mobile applications using React Native and participated in the complete software development lifecycle.",
-    image: "https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?w=800&h=400&fit=crop"
-  },
-  {
-    title: "Frontend Developer",
-    organization: "Digital Agency",
-    period: "Jun 2022 - Dec 2022",
-    description: "Developed responsive web interfaces and collaborated with design teams to create engaging user experiences.",
-    image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&h=400&fit=crop"
+    title: "Cloud Computing Enthusiast",
+    organization: "Bangkit Academy 2024",
+    period: "June 2024 - Present",
+    description: "Learning about cloud computing and its applications.",
+    image: "/images/experience/bangkit.png"
   }
 ];
 
@@ -111,26 +111,27 @@ export const projects = [
   },
   {
     id: 3,
-    title: "Financial Tracking App",
-    description: "Personal finance management application with budget tracking and expense categorization.",
-    tech: ["React", "Node.js", "MongoDB"],
-    previewImage: "https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=400&h=250&fit=crop",
-    detailedDescription: "A modern personal finance management application designed to help users take control of their financial health. The app provides intuitive expense tracking, budget planning, and financial goal setting with beautiful data visualizations and insightful analytics.",
+    title: "Portal TPB Universitas Andalas",
+    description: "Portal TPB Universitas Andalas",
+    tech: ["Laravel", "MySQL", "Pusher", "Flowbite"],
+    previewImage: "/images/project/tpb/login.png",
+    detailedDescription: "Portal Nilai Mahasiswa Departemen Teknik Pertanian & Biosistem Sesuai Panduan IABEE",
     features: [
-      "Expense tracking and categorization",
-      "Budget planning and monitoring",
-      "Financial goal setting",
-      "Interactive charts and analytics",
-      "Receipt scanning and storage",
-      "Bill reminder notifications"
+      "Dashboard Dosen",
+      "Dashboard Laport CPMK",
+      "Ketercapaian CPL",
+      "NIlai Mahassiwa Total & PerCPL"  
     ],
     images: [
-      "https://images.unsplash.com/photo-1531297484001-80022131f5a1",
-      "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b",
-      "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d"
+      "/images/project/tpb/login.png",
+      "/images/project/tpb/dashboard.png",
+      "/images/project/tpb/cpmk.png",
+      "/images/project/tpb/bobot.png",
+      "/images/project/tpb/laporcpmk.png",
+      "/images/project/tpb/nilai.png"
     ],
-    liveDemo: "",
-    sourceCode: "https://github.com/habiboys/financial-tracker"
+    liveDemo: "https://portal.tpbunand.com/",
+    sourceCode: ""
   }
 ];
 
@@ -198,7 +199,7 @@ export const contactInfo = {
   socialLinks: [
     {
       name: "LinkedIn",
-      url: "https://linkedin.com/in/yourprofile",
+      url: "https://www.linkedin.com/in/nouvalhabibie/",
       icon: "linkedin"
     },
     {
@@ -208,7 +209,7 @@ export const contactInfo = {
     },
     {
       name: "Instagram",
-      url: "https://instagram.com/yourusername",
+      url: "https://instagram.com/nuval18_",
       icon: "instagram"
     }
   ]

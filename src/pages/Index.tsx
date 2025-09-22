@@ -1,4 +1,4 @@
-                                                                                                                           import { ArrowRight, Mail, Github, Linkedin, ExternalLink, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowRight, Mail, Github, Linkedin, ExternalLink, X, ChevronLeft, ChevronRight, Instagram } from "lucide-react";                                                                                                                       
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { 
@@ -228,6 +228,7 @@ const Index = () => {
                     <CardContent className="p-8">
                       <div className="space-y-4">
                         <div className="flex justify-between items-start flex-wrap gap-4">
+                   
                           <div>
                             <h3 className="text-xl font-medium group-hover:text-gray-600 transition-colors duration-200">
                               {exp.title}
@@ -507,6 +508,15 @@ const Index = () => {
               >
                 <Linkedin className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform duration-200" />
                 LinkedIn
+              </Button>
+              <Button 
+                variant="outline" 
+                size="lg"
+                className="group border-white/30 hover:border-white bg-white/10 hover:bg-white/20 text-white transition-all duration-300 w-full md:w-auto backdrop-blur-sm"
+                onClick={() => window.open(personalInfo.instagram, '_blank')}
+              >
+                <Instagram className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform duration-200" />
+                Instagram
               </Button>
             </div>
           </Vortex>
