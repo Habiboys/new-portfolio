@@ -1,5 +1,3 @@
-                                // Portfolio Data Configuration
-// Edit file ini untuk mengupdate informasi portofolio
 
 export const personalInfo = {
   name: "Muhammad Nouval Habibie",
@@ -7,7 +5,7 @@ export const personalInfo = {
   description: "Information Systems student passionate about building innovative web and mobile solutions",
   photo: "/images/habibie.webp",
   email: "nouvalhabibie18@gmail.com",
-  phone: "+62 123 4567 8900",
+  phone: "+6285142247464",
   location: "Padang, Indonesia",
   linkedin: "https://www.linkedin.com/in/nouvalhabibie/",
   github: "https://github.com/habiboys",
