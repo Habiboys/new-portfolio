@@ -6,7 +6,7 @@ export const personalInfo = {
   photo: "/images/habibie.webp",
   email: "nouvalhabibie18@gmail.com",
   phone: "+6285142247464",
-  location: "Padang, Sumatra Barat, Indonesia",
+  location: "Sumatra Barat, Indonesia",
   linkedin: "https://www.linkedin.com/in/nouvalhabibie/",
   github: "https://github.com/habiboys",
   instagram: "https://www.instagram.com/nuval18_/"
