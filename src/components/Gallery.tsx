@@ -1,77 +1,25 @@
 "use client";
 import React from "react";
 import { LayoutGrid } from "./ui/layout-grid";
+import type { GalleryItem } from "@/types/portfolio";
 
-export function Gallery() {
+const CardSkeleton = ({ title }: { title: string }) => (
+  <div>
+    <p className="font-bold md:text-2xl text-xl text-white">{title}</p>
+  </div>
+);
+
+export function Gallery({ items }: { items: GalleryItem[] }) {
+  const cards = items.map((item) => ({
+    id: Number(item.id),
+    content: <CardSkeleton title={item.title} />,
+    className: item.className ?? "col-span-1",
+    thumbnail: item.thumbnail,
+  }));
+
   return (
     <div className="h-screen py-20 w-full">
       <LayoutGrid cards={cards} />
     </div>
   );
 }
-
-const SkeletonOne = () => {
-  return (
-    <div>
-      <p className="font-bold md:text-3xl text-xl text-white">
-        Neo Telemetri
-      </p>
-      <p className="font-normal text-base text-white"></p>
-    </div>
-  );
-};
-
-const SkeletonTwo = () => {
-  return (
-    <div>
-      <p className="font-bold md:text-2xl text-xl text-white">
-        Impact National Hackhaton By Maxy Academy 2024
-      </p>
-      <p className="font-normal text-base text-white"></p>
-    </div>
-  );
-};
-const SkeletonThree = () => {
-  return (
-    <div>
-      <p className="font-bold md:text-2xl text-xl text-white">Bukit Bintang</p>
- 
-    </div>
-  );
-};
-const SkeletonFour = () => {
-  return (
-    <div>
-      <p className="font-bold md:text-3xl text-xl text-white">
-        Hackathon CyberTech PNP 2024
-      </p>
-    </div>
-  );
-};
-
-const cards = [
-  {
-    id: 1,
-    content: <SkeletonOne />,
-    className: "md:col-span-2",
-    thumbnail: "/images/neo.webp",
-  },
-  {
-    id: 2,
-    content: <SkeletonTwo />,
-    className: "col-span-1",
-    thumbnail: "/images/blog/maxy.webp",
-  },
-  {
-    id: 3,
-    content: <SkeletonThree />,
-    className: "col-span-1",
-    thumbnail: "/images/blog/solo.jpg",
-  },
-  {
-    id: 4,
-    content: <SkeletonFour />,
-    className: "md:col-span-2",
-    thumbnail: "/images/blog/wincybertech.webp",
-  },
-];

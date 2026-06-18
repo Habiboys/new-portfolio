@@ -3,12 +3,14 @@ import { useParams, Link, Navigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowLeft, Calendar, Clock, Tag } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { blogPosts } from "@/data/portfolioData";
+import { useBlogPosts } from "@/hooks/usePortfolio";
 import Navbar from "@/components/Navbar";
 
 const BlogDetail = () => {
   const { id } = useParams();
-  const blogPost = blogPosts.find(post => post.id === parseInt(id || '0'));
+  const { data: blogPosts } = useBlogPosts();
+  const posts = blogPosts ?? [];
+  const blogPost = posts.find((post) => String(post.id) === String(id));
 
   if (!blogPost) {
     return <Navigate to="/blog" replace />;
@@ -216,7 +218,7 @@ const BlogDetail = () => {
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl font-light mb-12 text-center">Related Posts</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {blogPosts
+            {posts
               .filter(post => post.id !== blogPost.id && (
                 post.category === blogPost.category || 
                 post.tags.some(tag => blogPost.tags.includes(tag))

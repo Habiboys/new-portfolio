@@ -1,18 +1,18 @@
-import { ArrowRight, Mail, Github, Linkedin, ExternalLink, X, ChevronLeft, ChevronRight, Instagram } from "lucide-react";                                                                                                                       
+import { ArrowRight, Mail, Github, Linkedin, ExternalLink, X, ChevronLeft, ChevronRight, Instagram } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogHeader, 
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
   DialogTitle,
-  DialogDescription 
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { personalInfo, aboutMe, techStack, experiences, projects, contactInfo } from "@/data/portfolioData";
+import { usePortfolioData } from "@/hooks/usePortfolio";
 import { Boxes } from "@/components/ui/background-boxes";
 import { Gallery } from "@/components/Gallery";
 import { Blog } from "@/components/Blog";
@@ -21,6 +21,29 @@ import { Vortex } from "@/components/ui/vortex";
 import Navbar from "@/components/Navbar";
 
 const Index = () => {
+  const { data: portfolio } = usePortfolioData();
+
+  const personalInfo = portfolio?.personalInfo ?? {
+    name: "",
+    title: "",
+    description: "",
+    photo: "",
+    email: "",
+    linkedin: "",
+    github: "",
+    instagram: "",
+  };
+  const aboutMe = portfolio?.aboutMe ?? { paragraphs: [] };
+  const techStack = portfolio?.techStack ?? [];
+  const experiences = portfolio?.experiences ?? [];
+  const projects = portfolio?.projects ?? [];
+  const contactInfo = portfolio?.contactInfo ?? {
+    title: "",
+    description: "",
+    socialLinks: [],
+  };
+  const galleryItems = portfolio?.galleryItems ?? [];
+
   const [selectedProject, setSelectedProject] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
@@ -28,10 +51,10 @@ const Index = () => {
   useEffect(() => {
     if (selectedProject && selectedProject.images) {
       const interval = setInterval(() => {
-        setCurrentImageIndex((prev) => 
+        setCurrentImageIndex((prev) =>
           (prev + 1) % selectedProject.images.length
         );
-      }, 3000); // Change image every 3 seconds
+      }, 3000);
 
       return () => clearInterval(interval);
     }
@@ -47,11 +70,9 @@ const Index = () => {
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      element.scrollIntoView({ behavior: "smooth" });
     }
   };
-
-  // Data now imported from portfolioData.ts
 
   return (
     <main className="bg-white">
@@ -527,7 +548,7 @@ const Index = () => {
       <section id="gallery" className="py-20 px-6 bg-white">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-light mb-12 text-center">Gallery</h2>
-          <Gallery />
+          <Gallery items={galleryItems} />
         </div>
       </section>
 

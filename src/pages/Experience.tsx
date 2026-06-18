@@ -2,19 +2,20 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogHeader, 
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
   DialogTitle,
-  DialogDescription 
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { ArrowLeft } from "lucide-react";
-import { experiences } from "@/data/portfolioData";
+import { useExperiences } from "@/hooks/usePortfolio";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 
 const Experience = () => {
+  const { data: experiences } = useExperiences();
   return (
     <main className="bg-white min-h-screen">
       <Navbar />

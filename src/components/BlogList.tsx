@@ -3,12 +3,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import { blogPosts } from "@/data/portfolioData";
+import { useBlogPosts } from "@/hooks/usePortfolio";
 
 export const BlogList = () => {
+  const { data: blogPosts } = useBlogPosts();
+  const posts = blogPosts ?? [];
   return (
     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-      {blogPosts.map((post, index) => (
+      {posts.map((post, index) => (
         <Link 
           key={post.id} 
           to={`/blog/${post.id}`}
