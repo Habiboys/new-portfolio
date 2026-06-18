@@ -14,7 +14,7 @@ import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 
 const Projects = () => {
-  const { data: projects } = useProjects();
+  const { data: projects = [] } = useProjects();
   const [selectedProject, setSelectedProject] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 

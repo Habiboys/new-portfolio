@@ -13,7 +13,7 @@ export const BlogPreview = () => {
       {posts.slice(0, 3).map((post, index) => (
         <Link 
           key={post.id} 
-          to={`/blog/${post.id}`}
+          to={`/blog/${post.slug}`}
           className="group block"
         >
           <Card className="border-gray-200 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden">

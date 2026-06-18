@@ -7,10 +7,10 @@ import { useBlogPosts } from "@/hooks/usePortfolio";
 import Navbar from "@/components/Navbar";
 
 const BlogDetail = () => {
-  const { id } = useParams();
+  const { slug } = useParams();
   const { data: blogPosts } = useBlogPosts();
   const posts = blogPosts ?? [];
-  const blogPost = posts.find((post) => String(post.id) === String(id));
+  const blogPost = posts.find((post) => post.slug === slug);
 
   if (!blogPost) {
     return <Navigate to="/blog" replace />;
@@ -93,105 +93,12 @@ const BlogDetail = () => {
 
             {/* Main Content */}
             <div className="text-gray-700 leading-relaxed space-y-6">
-              {/* Since we don't have full content, we'll create some sample content based on the category */}
-              {blogPost.category === "Web Development" && (
-                <>
-                  <h2 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">Introduction</h2>
-                  <p>
-                    Modern web development has evolved significantly over the past few years. With the rise of frameworks like React and robust backend solutions like Node.js, developers now have powerful tools at their disposal to create scalable, maintainable applications.
-                  </p>
-                  
-                  <h2 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">Key Concepts</h2>
-                  <p>
-                    When building scalable web applications, there are several key concepts that every developer should understand:
-                  </p>
-                  <ul className="list-disc pl-6 space-y-2">
-                    <li>Component-based architecture</li>
-                    <li>State management patterns</li>
-                    <li>API design and integration</li>
-                    <li>Performance optimization</li>
-                    <li>Security best practices</li>
-                  </ul>
-
-                  <h2 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">Best Practices</h2>
-                  <p>
-                    Following established best practices is crucial for maintaining code quality and ensuring long-term project success. This includes proper code organization, testing strategies, and deployment procedures.
-                  </p>
-                </>
-              )}
-
-              {blogPost.category === "Cloud Computing" && (
-                <>
-                  <h2 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">The Cloud Revolution</h2>
-                  <p>
-                    Cloud computing has fundamentally changed how we approach software development and deployment. The ability to scale resources on-demand and leverage managed services has opened up new possibilities for developers and organizations.
-                  </p>
-                  
-                  <h2 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">Key Benefits</h2>
-                  <ul className="list-disc pl-6 space-y-2">
-                    <li>Scalability and flexibility</li>
-                    <li>Cost optimization</li>
-                    <li>Global reach and availability</li>
-                    <li>Managed services and automation</li>
-                    <li>Enhanced security and compliance</li>
-                  </ul>
-
-                  <h2 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">Future Trends</h2>
-                  <p>
-                    As cloud technology continues to evolve, we're seeing exciting developments in areas like serverless computing, edge computing, and AI/ML services that are making it easier than ever to build intelligent applications.
-                  </p>
-                </>
-              )}
-
-              {blogPost.category === "Database" && (
-                <>
-                  <h2 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">Database Design Fundamentals</h2>
-                  <p>
-                    Effective database design is the foundation of any successful application. Poor database design can lead to performance issues, data inconsistencies, and maintenance nightmares down the road.
-                  </p>
-                  
-                  <h2 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">Optimization Strategies</h2>
-                  <ul className="list-disc pl-6 space-y-2">
-                    <li>Proper indexing strategies</li>
-                    <li>Query optimization techniques</li>
-                    <li>Normalization vs. denormalization</li>
-                    <li>Caching mechanisms</li>
-                    <li>Connection pooling</li>
-                  </ul>
-
-                  <h2 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">Performance Monitoring</h2>
-                  <p>
-                    Regular monitoring and analysis of database performance is essential for maintaining optimal application performance and user experience.
-                  </p>
-                </>
-              )}
-
-              {(blogPost.category === "Machine Learning" || blogPost.category === "Frontend") && (
-                <>
-                  <h2 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">Getting Started</h2>
-                  <p>
-                    {blogPost.category === "Machine Learning" 
-                      ? "Machine learning is becoming increasingly accessible to web developers, with powerful libraries and APIs making it easier to integrate intelligent features into web applications."
-                      : "Modern CSS has evolved to include powerful features that make creating beautiful, responsive interfaces easier than ever before."
-                    }
-                  </p>
-                  
-                  <h2 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">Key Technologies</h2>
-                  <p>
-                    {blogPost.category === "Machine Learning"
-                      ? "From TensorFlow.js to cloud-based ML APIs, there are numerous tools available for integrating machine learning capabilities into your web applications."
-                      : "CSS Grid, Flexbox, custom properties, and modern layout techniques provide developers with unprecedented control over design and user experience."
-                    }
-                  </p>
-
-                  <h2 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">Practical Applications</h2>
-                  <p>
-                    {blogPost.category === "Machine Learning"
-                      ? "Real-world applications include recommendation systems, image recognition, natural language processing, and predictive analytics."
-                      : "These techniques can be applied to create responsive layouts, smooth animations, and engaging user interfaces that work across all devices."
-                    }
-                  </p>
-                </>
+              {blogPost.content && blogPost.content !== "Full blog content here..." ? (
+                <div dangerouslySetInnerHTML={{ __html: blogPost.content.replace(/\n/g, "<br/>") }} />
+              ) : (
+                <p className="text-gray-500 italic">
+                  Konten artikel belum tersedia. Silakan edit melalui admin panel.
+                </p>
               )}
             </div>
 
@@ -227,7 +134,7 @@ const BlogDetail = () => {
               .map((post) => (
                 <Link 
                   key={post.id} 
-                  to={`/blog/${post.id}`}
+                  to={`/blog/${post.slug}`}
                   className="group block"
                 >
                   <div className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">

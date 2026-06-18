@@ -15,7 +15,7 @@ import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 
 const Experience = () => {
-  const { data: experiences } = useExperiences();
+  const { data: experiences = [] } = useExperiences();
   return (
     <main className="bg-white min-h-screen">
       <Navbar />
