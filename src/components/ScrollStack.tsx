@@ -63,6 +63,7 @@ const ScrollStack = ({
   );
   const isUpdatingRef = useRef(false);
   const usingNativeScrollRef = useRef(false);
+  const nativeScrollCleanupRef = useRef<(() => void) | null>(null);
 
   const calculateProgress = useCallback((scrollTop: number, start: number, end: number) => {
     if (scrollTop < start) return 0;
@@ -238,7 +239,48 @@ const ScrollStack = ({
     if (useWindowScroll && !smoothScroll) {
       usingNativeScrollRef.current = true;
       nativeScrollHandlerRef.current = scheduleScrollUpdate;
-      window.addEventListener("scroll", scheduleScrollUpdate, { passive: true });
+
+      let scrollLoopId: number | null = null;
+      let scrollEndTimer: ReturnType<typeof setTimeout> | null = null;
+      let isTouchScrolling = false;
+
+      const runScrollLoop = () => {
+        handleScroll();
+        if (isTouchScrolling) {
+          scrollLoopId = requestAnimationFrame(runScrollLoop);
+        }
+      };
+
+      const onScrollActivity = () => {
+        scheduleScrollUpdate();
+        if (!isTouchScrolling) {
+          isTouchScrolling = true;
+          scrollLoopId = requestAnimationFrame(runScrollLoop);
+        }
+        if (scrollEndTimer) clearTimeout(scrollEndTimer);
+        scrollEndTimer = setTimeout(() => {
+          isTouchScrolling = false;
+          if (scrollLoopId !== null) {
+            cancelAnimationFrame(scrollLoopId);
+            scrollLoopId = null;
+          }
+          handleScroll();
+        }, 150);
+      };
+
+      nativeScrollHandlerRef.current = onScrollActivity;
+      window.addEventListener("scroll", onScrollActivity, { passive: true });
+      window.addEventListener("touchmove", onScrollActivity, { passive: true });
+
+      const cleanup = () => {
+        window.removeEventListener("scroll", onScrollActivity);
+        window.removeEventListener("touchmove", onScrollActivity);
+        if (scrollEndTimer) clearTimeout(scrollEndTimer);
+        if (scrollLoopId !== null) cancelAnimationFrame(scrollLoopId);
+      };
+
+      nativeScrollCleanupRef.current = cleanup;
+      usingNativeScrollRef.current = true;
       return;
     }
 
@@ -342,16 +384,21 @@ const ScrollStack = ({
     window.addEventListener("orientationchange", remeasure, { passive: true });
 
     const remeasureTimer = window.setTimeout(remeasure, 150);
+    const remeasureTimerLate = performanceMode
+      ? window.setTimeout(remeasure, 400)
+      : undefined;
 
     return () => {
       window.clearTimeout(remeasureTimer);
+      if (remeasureTimerLate !== undefined) window.clearTimeout(remeasureTimerLate);
       window.removeEventListener("resize", onResize);
       window.removeEventListener("orientationchange", remeasure);
-      if (usingNativeScrollRef.current && nativeScrollHandlerRef.current) {
-        window.removeEventListener("scroll", nativeScrollHandlerRef.current);
-        usingNativeScrollRef.current = false;
-        nativeScrollHandlerRef.current = null;
+      if (nativeScrollCleanupRef.current) {
+        nativeScrollCleanupRef.current();
+        nativeScrollCleanupRef.current = null;
       }
+      usingNativeScrollRef.current = false;
+      nativeScrollHandlerRef.current = null;
       if (scrollRafRef.current !== null) {
         cancelAnimationFrame(scrollRafRef.current);
         scrollRafRef.current = null;

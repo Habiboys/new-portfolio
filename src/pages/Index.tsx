@@ -265,7 +265,7 @@ const Index = () => {
             </Link>
           </div>
 
-          <LazyMount minHeight={prefersReducedMotion ? 360 : 320}>
+          <LazyMount minHeight={prefersReducedMotion ? 280 : isMobile ? 360 : 320}>
             {prefersReducedMotion ? (
               <div className="space-y-5">
                 {experiences.map((exp, index) => (

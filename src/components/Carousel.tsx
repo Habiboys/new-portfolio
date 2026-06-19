@@ -1,6 +1,6 @@
-import type { ProjectItem } from "@/types/portfolio";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { cn } from "@/lib/utils";
+import type { ProjectItem } from "@/types/portfolio";
 import { ExternalLink } from "lucide-react";
 import { motion, useMotionValue, useTransform } from "motion/react";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -43,7 +43,7 @@ function CarouselItem({
   const p = item.project;
   const [hovered, setHovered] = useState(false);
   const canHover = useMediaQuery("(hover: hover) and (pointer: fine)");
-  const showContent = hovered || !canHover;
+  const showContent = canHover && hovered;
 
   const openDetail = () => {
     if (!canHover) return;
@@ -56,14 +56,13 @@ function CarouselItem({
       style={{
         width: itemWidth,
         height: "100%",
-        rotateY,
+        rotateY: canHover ? rotateY : 0,
       }}
       transition={transition}
       onClick={openDetail}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      onMouseEnter={() => canHover && setHovered(true)}
+      onMouseLeave={() => canHover && setHovered(false)}
     >
-      {/* Background image */}
       <div className="carousel-item-bg">
         <img
           src={p.previewImage}
@@ -73,25 +72,26 @@ function CarouselItem({
             (e.target as HTMLImageElement).style.display = "none";
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-white/90 via-white/30 to-transparent" />
+        {canHover && (
+          <div className="absolute inset-0 bg-gradient-to-t from-white/90 via-white/30 to-transparent" />
+        )}
       </div>
 
-      {/* Content overlay — slide up on hover */}
-      <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10 z-10 pointer-events-none">
-        <motion.div
-          initial={{ opacity: 0, y: 60 }}
-          animate={showContent ? { opacity: 1, y: 0 } : { opacity: 0, y: 60 }}
-          transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-        >
-          <h2 className="text-lg md:text-xl font-bold text-gray-900 mb-1">
-            {p.title}
-          </h2>
+      {canHover && (
+        <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10 z-10 pointer-events-none">
+          <motion.div
+            initial={{ opacity: 0, y: 60 }}
+            animate={showContent ? { opacity: 1, y: 0 } : { opacity: 0, y: 60 }}
+            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <h2 className="text-lg md:text-xl font-bold text-gray-900 mb-1">
+              {p.title}
+            </h2>
 
-          <p className="text-gray-500/70 text-xs md:text-sm font-medium max-w-xl leading-relaxed line-clamp-2">
-            {p.description}
-          </p>
+            <p className="text-gray-500/70 text-xs md:text-sm font-medium max-w-xl leading-relaxed line-clamp-2">
+              {p.description}
+            </p>
 
-          {canHover && (
             <div className="mt-3">
               <button
                 type="button"
@@ -105,9 +105,9 @@ function CarouselItem({
                 <ExternalLink className="w-3.5 h-3.5" />
               </button>
             </div>
-          )}
-        </motion.div>
-      </div>
+          </motion.div>
+        </div>
+      )}
     </motion.div>
   );
 }
@@ -153,6 +153,7 @@ export default function Carousel({
   const [isAnimating, setIsAnimating] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   useEffect(() => {
     if (pauseOnHover && containerRef.current) {
@@ -301,8 +302,10 @@ export default function Carousel({
         style={{
           width: itemWidth,
           gap: `${GAP}px`,
-          perspective: 1200,
-          perspectiveOrigin: `${position * trackItemOffset + itemWidth / 2}px 50%`,
+          perspective: isMobile ? undefined : 1200,
+          perspectiveOrigin: isMobile
+            ? undefined
+            : `${position * trackItemOffset + itemWidth / 2}px 50%`,
           x,
         }}
         onDragEnd={handleDragEnd}

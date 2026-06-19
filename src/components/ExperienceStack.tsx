@@ -1,5 +1,5 @@
-import ScrollStack, { ScrollStackItem } from "@/components/ScrollStack";
 import { ExperienceCard } from "@/components/ExperienceCard";
+import ScrollStack, { ScrollStackItem } from "@/components/ScrollStack";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import type { ExperienceItem } from "@/types/portfolio";
 import { useMemo } from "react";
@@ -15,24 +15,24 @@ export default function ExperienceStack({ experiences }: Props) {
     const vh = typeof window !== "undefined" ? window.innerHeight : 800;
     const count = Math.max(experiences.length, 1);
     if (isMobile) {
-      return Math.max(96, (count - 1) * 40 + vh * 0.045);
+      return Math.max(140, (count - 1) * 52 + vh * 0.08);
     }
     return Math.max(120, (count - 1) * 56 + vh * 0.06);
   }, [experiences.length, isMobile]);
 
   return (
     <ScrollStack
-      useWindowScroll={true}
+      useWindowScroll
       smoothScroll={!isMobile}
       performanceMode={isMobile}
       innerClassName="scroll-stack-inner--compact"
       endSpacerHeight={endSpacerHeight}
-      itemDistance={isMobile ? 20 : 28}
-      itemScale={isMobile ? 0.012 : 0.02}
-      itemStackDistance={isMobile ? 10 : 14}
-      stackPosition={isMobile ? "12%" : "16%"}
-      scaleEndPosition={isMobile ? "6%" : "8%"}
-      baseScale={isMobile ? 0.94 : 0.9}
+      itemDistance={isMobile ? 24 : 28}
+      itemScale={isMobile ? 0.015 : 0.02}
+      itemStackDistance={isMobile ? 12 : 14}
+      stackPosition={isMobile ? "14%" : "16%"}
+      scaleEndPosition="8%"
+      baseScale={isMobile ? 0.93 : 0.9}
       rotationAmount={0}
       blurAmount={0}
     >
