@@ -65,7 +65,7 @@ export type GalleryItem = {
   title: string;
   description?: string | null;
   thumbnail: string;
-  className?: string | null;
+  imageAlt?: string | null;
 };
 
 export type PortfolioData = {

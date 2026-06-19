@@ -1,13 +1,15 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import { motion, useMotionValue, useTransform } from "motion/react";
-import { ExternalLink } from "lucide-react";
 import type { ProjectItem } from "@/types/portfolio";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { cn } from "@/lib/utils";
+import { ExternalLink } from "lucide-react";
+import { motion, useMotionValue, useTransform } from "motion/react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import "./Carousel.css";
 
 const DRAG_BUFFER = 0;
 const VELOCITY_THRESHOLD = 500;
 const GAP = 16;
-const SPRING_OPTIONS = { type: "spring", stiffness: 300, damping: 30 } as const;
+const SPRING_OPTIONS = { type: "spring", stiffness: 520, damping: 32 } as const;
 
 type CarouselItemData = {
   project: ProjectItem;
@@ -40,6 +42,8 @@ function CarouselItem({
 
   const p = item.project;
   const [hovered, setHovered] = useState(false);
+  const canHover = useMediaQuery("(hover: hover) and (pointer: fine)");
+  const showContent = hovered || !canHover;
 
   return (
     <motion.div
@@ -71,26 +75,9 @@ function CarouselItem({
       <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10 z-10 pointer-events-none">
         <motion.div
           initial={{ opacity: 0, y: 60 }}
-          animate={hovered ? { opacity: 1, y: 0 } : { opacity: 0, y: 60 }}
+          animate={showContent ? { opacity: 1, y: 0 } : { opacity: 0, y: 60 }}
           transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
         >
-          {/* Tech badges */}
-          <div className="flex flex-wrap gap-2 mb-4">
-            {p.tech.slice(0, 4).map((t, i) => (
-              <span
-                key={i}
-                className="px-3 py-1 bg-gray-900/10 text-gray-700 text-xs rounded-full"
-              >
-                {t}
-              </span>
-            ))}
-            {p.tech.length > 4 && (
-              <span className="px-3 py-1 bg-gray-900/5 text-gray-400 text-xs rounded-full">
-                +{p.tech.length - 4}
-              </span>
-            )}
-          </div>
-
           <h2 className="text-lg md:text-xl font-bold text-gray-900 mb-1">
             {p.title}
           </h2>
@@ -105,7 +92,7 @@ function CarouselItem({
                 e.stopPropagation();
                 onSelectProject?.(p);
               }}
-              className="inline-flex items-center gap-2 px-5 py-2 bg-gray-900 text-white rounded-full font-medium text-xs hover:bg-gray-800 hover:scale-105 active:scale-95 shadow-lg transition-all duration-200 pointer-events-auto"
+              className="inline-flex items-center gap-2 px-5 py-2 bg-gray-900 text-white rounded-full font-medium text-xs hover:bg-gray-800 hover:scale-105 active:scale-95 transition-all duration-200 pointer-events-auto"
             >
               View Details
               <ExternalLink className="w-3.5 h-3.5" />
@@ -131,7 +118,7 @@ export default function Carousel({
   items,
   baseWidth = 500,
   autoplay = true,
-  autoplayDelay = 2500,
+  autoplayDelay = 2000,
   pauseOnHover = true,
   loop = true,
   onSelectProject,
@@ -264,16 +251,39 @@ export default function Carousel({
         ? ((position - 1 + items.length) % items.length)
         : Math.min(position, items.length - 1);
 
+  const goToSlide = (index: number) => {
+    setPosition(loop ? index + 1 : index);
+  };
+
+  const previewSlides =
+    items.length <= 1
+      ? [{ index: 0, label: "Current" }]
+      : [
+          {
+            index: (activeIndex - 1 + items.length) % items.length,
+            label: "Previous",
+          },
+          { index: activeIndex, label: "Current" },
+          {
+            index: (activeIndex + 1) % items.length,
+            label: "Next",
+          },
+        ];
+
   if (items.length === 0) return null;
 
   return (
     <div
+      className="carousel-wrapper mx-auto"
+      style={{ maxWidth: `${baseWidth}px` }}
+    >
+    <div
       ref={containerRef}
-      className="carousel-container"
+      className="carousel-container mx-auto"
       style={{
-        width: `${baseWidth}px`,
-        height: `${baseWidth * 0.55}px`,
-        minHeight: 480,
+        width: "100%",
+        maxWidth: `${baseWidth}px`,
+        height: `${Math.round(baseWidth * 0.55)}px`,
       }}
     >
       <motion.div
@@ -307,8 +317,8 @@ export default function Carousel({
         ))}
       </motion.div>
 
-      {/* Dot indicators */}
-      <div className="carousel-indicators-container">
+      {/* Dot indicators — sr-only fallback */}
+      <div className="carousel-indicators-container" aria-hidden="true">
         <div className="carousel-indicators">
           {items.map((_, index) => (
             <motion.button
@@ -318,12 +328,58 @@ export default function Carousel({
               aria-label={`Go to slide ${index + 1}`}
               aria-current={activeIndex === index}
               animate={{ scale: activeIndex === index ? 1.2 : 1 }}
-              onClick={() => setPosition(loop ? index + 1 : index)}
+              onClick={() => goToSlide(index)}
               transition={{ duration: 0.15 }}
             />
           ))}
         </div>
       </div>
+    </div>
+
+    <div
+      className={cn(
+        "carousel-preview",
+        previewSlides.length === 1 && "carousel-preview--single"
+      )}
+      role="tablist"
+      aria-label="Project slides"
+    >
+      {previewSlides.map(({ index, label }) => {
+        const project = items[index];
+        const isCurrent = index === activeIndex;
+
+        return (
+          <button
+            key={`${project.slug ?? project.title}-${label}`}
+            type="button"
+            role="tab"
+            aria-selected={isCurrent}
+            aria-label={`${label}: ${project.title}`}
+            className={cn(
+              "carousel-preview-item",
+              isCurrent && "carousel-preview-item--current",
+              label === "Previous" && "carousel-preview-item--prev",
+              label === "Next" && "carousel-preview-item--next"
+            )}
+            onClick={() => goToSlide(index)}
+          >
+            <div className="carousel-preview-media">
+              <img
+                src={project.previewImage}
+                alt=""
+                draggable={false}
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+            <div className="carousel-preview-meta">
+              <span className="carousel-preview-label">{label}</span>
+              <p className="carousel-preview-title">{project.title}</p>
+            </div>
+          </button>
+        );
+      })}
+    </div>
     </div>
   );
 }

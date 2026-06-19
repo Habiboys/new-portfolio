@@ -16,11 +16,10 @@ const Projects = () => {
   return (
     <main className="bg-white min-h-screen">
       <Navbar />
-      <div className="h-16" />
 
       {/* Header */}
-      <div className="bg-gradient-to-br from-gray-50 via-white to-gray-100/50 py-16 md:py-20">
-        <div className="max-w-6xl mx-auto px-6">
+      <div className="bg-gradient-to-br from-gray-50 via-white to-gray-100/50 pt-28 sm:pt-32 pb-12 md:pb-20">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <Link
             to="/"
             className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-8 transition-colors duration-200"
@@ -33,8 +32,8 @@ const Projects = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <h1 className="text-4xl md:text-5xl font-light mb-4">Projects</h1>
-            <p className="text-xl text-gray-600 max-w-3xl">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-light mb-4">Projects</h1>
+            <p className="text-base sm:text-xl text-gray-600 max-w-3xl">
               A collection of my work showcasing various technologies and solutions I've built.
             </p>
           </motion.div>
@@ -42,7 +41,7 @@ const Projects = () => {
       </div>
 
       {/* Project Grid */}
-      <section className="py-16 px-6">
+      <section className="py-12 md:py-16 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {projects.map((project, index) => (

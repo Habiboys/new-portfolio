@@ -19,12 +19,11 @@ const BlogDetail = () => {
   return (
     <main className="bg-white min-h-screen">
       <Navbar />
-      <div className="h-16"></div>
-      
+
       {/* Hero Section */}
-      <section className="py-20 px-6">
+      <section className="pt-28 sm:pt-32 pb-12 md:pb-20 px-4 sm:px-6">
         <div className="max-w-4xl mx-auto">
-          <Link to="/blog" className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-8 transition-colors duration-200">
+          <Link to="/blog" className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-6 sm:mb-8 transition-colors duration-200">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Blog
           </Link>
@@ -43,7 +42,7 @@ const BlogDetail = () => {
             </div>
 
             {/* Title */}
-            <h1 className="text-4xl md:text-5xl font-light mb-6 leading-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-light mb-4 sm:mb-6 leading-tight break-words">
               {blogPost.title}
             </h1>
 
@@ -78,7 +77,7 @@ const BlogDetail = () => {
       </section>
 
       {/* Content Section */}
-      <section className="pb-20 px-6">
+      <section className="pb-12 md:pb-20 px-4 sm:px-6">
         <div className="max-w-4xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -87,7 +86,7 @@ const BlogDetail = () => {
             className="prose prose-lg max-w-none"
           >
             {/* Excerpt */}
-            <div className="text-xl text-gray-600 leading-relaxed mb-8 p-6 bg-gray-50 rounded-lg border-l-4 border-gray-300">
+            <div className="text-base sm:text-xl text-gray-600 leading-relaxed mb-6 sm:mb-8 p-4 sm:p-6 bg-gray-50 rounded-lg border-l-4 border-gray-300">
               {blogPost.excerpt}
             </div>
 
@@ -121,9 +120,9 @@ const BlogDetail = () => {
       </section>
 
       {/* Related Posts Section */}
-      <section className="py-20 px-6 bg-gray-50">
+      <section className="py-12 md:py-20 px-4 sm:px-6 bg-gray-50">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl font-light mb-12 text-center">Related Posts</h2>
+          <h2 className="text-2xl sm:text-3xl font-light mb-8 md:mb-12 text-center">Related Posts</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {posts
               .filter(post => post.id !== blogPost.id && (

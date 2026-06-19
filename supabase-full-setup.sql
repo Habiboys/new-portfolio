@@ -146,12 +146,17 @@ create table if not exists gallery_items (
   description text,
   image_base64 text not null,
   image_alt text,
-  class_name text,
+  class_name text, -- legacy grid layout (deprecated, unused by CircularGallery)
   sort_order int not null default 0,
   is_visible boolean not null default true,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+
+comment on column gallery_items.title is 'Label teks di CircularGallery (beranda)';
+comment on column gallery_items.image_base64 is 'URL gambar, storage:path, atau data URL';
+comment on column gallery_items.image_alt is 'Alt text untuk aksesibilitas';
+comment on column gallery_items.class_name is 'Deprecated — dulu untuk CSS grid, tidak dipakai lagi';
 
 create table if not exists contact_sections (
   id uuid primary key default gen_random_uuid(),
@@ -575,13 +580,52 @@ begin
     (v_profile_id, 'GitHub', 'https://github.com/habiboys', 'github', 2),
     (v_profile_id, 'Instagram', 'https://instagram.com/nuval18_', 'instagram', 3);
 
-  -- Gallery items
-  insert into gallery_items (title, description, image_base64, image_alt, class_name, sort_order) values
-    ('Neo Telemetri', null, 'data:image/webp;base64,PASTE_BASE64_GALLERY_NEO_WEBP', 'Neo Telemetri', 'md:col-span-2', 1),
-    ('Impact National Hackhaton By Maxy Academy 2024', null, 'data:image/webp;base64,PASTE_BASE64_GALLERY_MAXY_WEBP', 'Impact National Hackhaton By Maxy Academy 2024', 'col-span-1', 2),
-    ('Bukit Bintang', null, 'data:image/jpeg;base64,PASTE_BASE64_GALLERY_SOLO_JPG', 'Bukit Bintang', 'col-span-1', 3),
-    ('Hackathon CyberTech PNP 2024', null, 'data:image/webp;base64,PASTE_BASE64_GALLERY_WINCYBERTECH_WEBP', 'Hackathon CyberTech PNP 2024', 'md:col-span-2', 4);
+  -- Gallery items (CircularGallery: title = label, image_base64 = foto, image_alt = a11y)
+  insert into gallery_items (title, description, image_base64, image_alt, sort_order) values
+    ('Neo Telemetri', null, 'data:image/webp;base64,PASTE_BASE64_GALLERY_NEO_WEBP', 'Neo Telemetri', 1),
+    ('Impact National Hackhaton By Maxy Academy 2024', null, 'data:image/webp;base64,PASTE_BASE64_GALLERY_MAXY_WEBP', 'Impact National Hackhaton By Maxy Academy 2024', 2),
+    ('Bukit Bintang', null, 'data:image/jpeg;base64,PASTE_BASE64_GALLERY_SOLO_JPG', 'Bukit Bintang', 3),
+    ('Hackathon CyberTech PNP 2024', null, 'data:image/webp;base64,PASTE_BASE64_GALLERY_WINCYBERTECH_WEBP', 'Hackathon CyberTech PNP 2024', 4);
 end $$;
+
+-- =============================================
+-- 8. SUPABASE STORAGE (portfolio-media)
+-- Bucket PUBLIC: gambar bisa dibuka langsung via URL getPublicUrl().
+-- JANGAN buat policy SELECT di storage.objects — itu memungkinkan list semua file
+-- (Supabase Advisor warning). Upload/delete cukup untuk admin (authenticated).
+-- =============================================
+
+insert into storage.buckets (id, name, public)
+values ('portfolio-media', 'portfolio-media', true)
+on conflict (id) do update set public = true;
+
+drop policy if exists "Public read portfolio media" on storage.objects;
+drop policy if exists "Authenticated upload portfolio media" on storage.objects;
+drop policy if exists "Authenticated update portfolio media" on storage.objects;
+drop policy if exists "Authenticated delete portfolio media" on storage.objects;
+
+create policy "Authenticated upload portfolio media"
+on storage.objects for insert
+to authenticated
+with check (bucket_id = 'portfolio-media');
+
+create policy "Authenticated update portfolio media"
+on storage.objects for update
+to authenticated
+using (bucket_id = 'portfolio-media')
+with check (bucket_id = 'portfolio-media');
+
+create policy "Authenticated delete portfolio media"
+on storage.objects for delete
+to authenticated
+using (bucket_id = 'portfolio-media');
+
+-- =============================================
+-- OPSIONAL: migrasi gallery lama (hapus class_name grid)
+-- Jalankan sekali di SQL Editor jika DB sudah ada sebelumnya
+-- =============================================
+-- update gallery_items set class_name = null where class_name is not null;
+-- alter table gallery_items drop column if exists class_name;
 
 -- =============================================
 -- VERIFIKASI

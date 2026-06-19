@@ -4,10 +4,15 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useBlogPosts } from "@/hooks/usePortfolio";
+import { BlogPreviewSkeleton } from "@/components/IndexPageSkeleton";
 
 export const BlogPreview = () => {
-  const { data: blogPosts } = useBlogPosts();
+  const { data: blogPosts, isLoading } = useBlogPosts();
   const posts = blogPosts ?? [];
+
+  if (isLoading) {
+    return <BlogPreviewSkeleton />;
+  }
   return (
     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
       {posts.slice(0, 3).map((post, index) => (

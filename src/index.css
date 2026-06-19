@@ -99,8 +99,13 @@ All colors MUST be HSL.
     @apply border-border;
   }
 
+  html {
+    overflow-x: hidden;
+  }
+
   body {
     @apply bg-background text-foreground;
+    overflow-x: hidden;
   }
 }
 
@@ -128,28 +133,53 @@ All colors MUST be HSL.
   .prose h1 {
     color: #111827;
     font-weight: 800;
-    font-size: 2.25rem;
+    font-size: 1.875rem;
     margin-top: 0;
-    margin-bottom: 2rem;
-    line-height: 1.1111111;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+  }
+
+  @media (min-width: 768px) {
+    .prose h1 {
+      font-size: 2.25rem;
+      margin-bottom: 2rem;
+      line-height: 1.1111111;
+    }
   }
   
   .prose h2 {
     color: #111827;
     font-weight: 700;
-    font-size: 1.875rem;
-    margin-top: 2rem;
-    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
     line-height: 1.3333333;
+  }
+
+  @media (min-width: 768px) {
+    .prose h2 {
+      font-size: 1.875rem;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+    }
   }
   
   .prose h3 {
     color: #111827;
     font-weight: 600;
-    font-size: 1.5rem;
-    margin-top: 1.6rem;
-    margin-bottom: 0.6rem;
-    line-height: 1.6;
+    font-size: 1.25rem;
+    margin-top: 1.25rem;
+    margin-bottom: 0.5rem;
+    line-height: 1.5;
+  }
+
+  @media (min-width: 768px) {
+    .prose h3 {
+      font-size: 1.5rem;
+      margin-top: 1.6rem;
+      margin-bottom: 0.6rem;
+      line-height: 1.6;
+    }
   }
   
   .prose p {
@@ -193,5 +223,39 @@ All colors MUST be HSL.
     margin-top: 1.6rem;
     margin-bottom: 1.6rem;
     padding-left: 1rem;
+  }
+}
+
+@layer utilities {
+  .animate-hero-in {
+    animation: hero-in 0.7s ease-out both;
+  }
+
+  .animate-hero-in-delay-1 {
+    animation: hero-in 0.7s ease-out 0.15s both;
+  }
+
+  .animate-hero-in-delay-2 {
+    animation: hero-in 0.7s ease-out 0.3s both;
+  }
+
+  @keyframes hero-in {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-hero-in,
+    .animate-hero-in-delay-1,
+    .animate-hero-in-delay-2,
+    .animate-marquee {
+      animation: none !important;
+    }
   }
 }

@@ -1,3 +1,4 @@
+import { resolveImage } from "@/lib/imageUtils";
 import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 import type {
   PortfolioData,
@@ -21,11 +22,10 @@ import {
 
 // ---------- helpers ----------
 
-function resolveImage(value: string | null | undefined): string {
-  if (!value || value.startsWith("https://")) return value ?? "";
-  // base64 data URL or empty
-  return value ?? "";
-}
+type FetchOptions = {
+  includeImages?: boolean;
+  includeContent?: boolean;
+};
 
 function toSlug(text: string): string {
   return text
@@ -108,12 +108,18 @@ async function fetchTechStackFromSupabase(
 }
 
 async function fetchExperiencesFromSupabase(
-  profileId?: string
+  profileId?: string,
+  options: FetchOptions = {}
 ): Promise<ExperienceItem[] | null> {
   if (!supabase || !profileId) return null;
+  const includeImages = options.includeImages ?? true;
   const { data } = await supabase
     .from("experiences")
-    .select("*")
+    .select(
+      includeImages
+        ? "*"
+        : "title, organization, period_label, description, sort_order"
+    )
     .eq("profile_id", profileId)
     .eq("is_visible", true)
     .order("sort_order");
@@ -123,14 +129,17 @@ async function fetchExperiencesFromSupabase(
     organization: r.organization,
     period: r.period_label,
     description: r.description,
-    image: resolveImage(r.image_base64),
+    image: includeImages ? resolveImage(r.image_base64) : "",
   }));
 }
 
 async function fetchProjectsFromSupabase(
-  profileId?: string
+  profileId?: string,
+  options: FetchOptions = {}
 ): Promise<ProjectItem[] | null> {
   if (!supabase || !profileId) return null;
+  const includeImages = options.includeImages ?? true;
+
   const { data: projects } = await supabase
     .from("projects")
     .select("id")
@@ -139,32 +148,29 @@ async function fetchProjectsFromSupabase(
     .order("sort_order");
   if (!projects || projects.length === 0) return null;
 
-  // fetch full project details with joins
   const ids = projects.map((p) => p.id);
 
-  const [
-    { data: full },
-    { data: images },
-    { data: features },
-    { data: tech },
-  ] = await Promise.all([
-    supabase.from("projects").select("*").in("id", ids),
-    supabase
-      .from("project_images")
-      .select("project_id, image_base64, image_alt, sort_order")
-      .in("project_id", ids)
-      .order("sort_order"),
-    supabase
-      .from("project_features")
-      .select("project_id, feature, sort_order")
-      .in("project_id", ids)
-      .order("sort_order"),
-    supabase
-      .from("project_technologies")
-      .select("project_id, technology_name, sort_order")
-      .in("project_id", ids)
-      .order("sort_order"),
-  ]);
+  const fullPromise = supabase.from("projects").select("*").in("id", ids);
+  const featuresPromise = supabase
+    .from("project_features")
+    .select("project_id, feature, sort_order")
+    .in("project_id", ids)
+    .order("sort_order");
+  const techPromise = supabase
+    .from("project_technologies")
+    .select("project_id, technology_name, sort_order")
+    .in("project_id", ids)
+    .order("sort_order");
+  const imagesPromise = includeImages
+    ? supabase
+        .from("project_images")
+        .select("project_id, image_base64, image_alt, sort_order")
+        .in("project_id", ids)
+        .order("sort_order")
+    : Promise.resolve({ data: null, error: null });
+
+  const [{ data: full }, { data: images }, { data: features }, { data: tech }] =
+    await Promise.all([fullPromise, imagesPromise, featuresPromise, techPromise]);
 
   if (!full) return null;
 
@@ -193,17 +199,71 @@ async function fetchProjectsFromSupabase(
     previewImage: resolveImage(p.preview_image_base64),
     detailedDescription: p.detailed_description ?? p.description,
     features: featureMap[p.id] ?? [],
-    images: imageMap[p.id] ?? [],
+    images: includeImages ? imageMap[p.id] ?? [] : [],
     liveDemo: p.live_demo_url ?? "",
     sourceCode: p.source_code_url ?? "",
   }));
 }
 
-async function fetchBlogPostsFromSupabase(): Promise<BlogPost[] | null> {
+async function fetchProjectByIdFromSupabase(
+  id: string | number
+): Promise<ProjectItem | null> {
   if (!supabase) return null;
+
+  const { data: p } = await supabase
+    .from("projects")
+    .select("*")
+    .eq("id", id)
+    .eq("is_visible", true)
+    .maybeSingle();
+
+  if (!p) return null;
+
+  const [{ data: images }, { data: features }, { data: tech }] = await Promise.all([
+    supabase
+      .from("project_images")
+      .select("image_base64, sort_order")
+      .eq("project_id", p.id)
+      .order("sort_order"),
+    supabase
+      .from("project_features")
+      .select("feature, sort_order")
+      .eq("project_id", p.id)
+      .order("sort_order"),
+    supabase
+      .from("project_technologies")
+      .select("technology_name, sort_order")
+      .eq("project_id", p.id)
+      .order("sort_order"),
+  ]);
+
+  return {
+    id: p.id,
+    title: p.title,
+    slug: p.slug,
+    description: p.description,
+    tech: (tech ?? []).map((t) => t.technology_name),
+    previewImage: resolveImage(p.preview_image_base64),
+    detailedDescription: p.detailed_description ?? p.description,
+    features: (features ?? []).map((f) => f.feature),
+    images: (images ?? []).map((img) => resolveImage(img.image_base64)),
+    liveDemo: p.live_demo_url ?? "",
+    sourceCode: p.source_code_url ?? "",
+  };
+}
+
+async function fetchBlogPostsFromSupabase(
+  options: FetchOptions = {}
+): Promise<BlogPost[] | null> {
+  if (!supabase) return null;
+  const includeContent = options.includeContent ?? true;
+  const selectFields = includeContent
+    ? "id, title, slug, excerpt, content, image_base64, image_alt, published_at, read_time, category_id"
+    : "id, title, slug, excerpt, image_base64, image_alt, published_at, read_time, category_id";
+
   const { data: posts } = await supabase
     .from("blog_posts")
-    .select("id, title, slug, excerpt, content, image_base64, image_alt, published_at, read_time, category_id")
+    .select(selectFields)
     .eq("is_published", true)
     .order("published_at", { ascending: false });
   if (!posts || posts.length === 0) return null;
@@ -244,7 +304,7 @@ async function fetchBlogPostsFromSupabase(): Promise<BlogPost[] | null> {
     slug: p.slug,
     title: p.title,
     excerpt: p.excerpt,
-    content: p.content,
+    content: includeContent ? p.content ?? "" : "",
     date: p.published_at ?? "",
     readTime: p.read_time ?? "",
     category: catMap[p.category_id] ?? "Uncategorized",
@@ -286,7 +346,7 @@ async function fetchGalleryFromSupabase(): Promise<GalleryItem[] | null> {
   if (!supabase) return null;
   const { data } = await supabase
     .from("gallery_items")
-    .select("id, title, description, image_base64, image_alt, class_name")
+    .select("id, title, description, image_base64, image_alt")
     .eq("is_visible", true)
     .order("sort_order");
   if (!data || data.length === 0) return null;
@@ -295,20 +355,25 @@ async function fetchGalleryFromSupabase(): Promise<GalleryItem[] | null> {
     title: r.title,
     description: r.description,
     thumbnail: resolveImage(r.image_base64),
-    className: r.class_name,
+    imageAlt: r.image_alt ?? r.title,
   }));
 }
 
 // ---------- aggregated fetch ----------
 
 export async function fetchPortfolioData(): Promise<PortfolioData> {
+  const landingOptions: FetchOptions = {
+    includeImages: false,
+    includeContent: false,
+  };
+
   if (!isSupabaseConfigured) {
-    return getLocalFallback();
+    return getLocalFallback(landingOptions);
   }
 
   try {
     const profile = await fetchProfileFromSupabase();
-    if (!profile) return getLocalFallback();
+    if (!profile) return getLocalFallback(landingOptions);
 
     const profileId = undefined; // we don't expose UUID in output, but all fetchers need it
 
@@ -328,9 +393,9 @@ export async function fetchPortfolioData(): Promise<PortfolioData> {
       await Promise.all([
         pid ? fetchAboutFromSupabase(pid) : null,
         pid ? fetchTechStackFromSupabase(pid) : null,
-        pid ? fetchExperiencesFromSupabase(pid) : null,
-        pid ? fetchProjectsFromSupabase(pid) : null,
-        fetchBlogPostsFromSupabase(),
+        pid ? fetchExperiencesFromSupabase(pid, { includeImages: false }) : null,
+        pid ? fetchProjectsFromSupabase(pid, { includeImages: false }) : null,
+        fetchBlogPostsFromSupabase({ includeContent: false }),
         pid ? fetchContactFromSupabase(pid) : null,
         fetchGalleryFromSupabase(),
       ]);
@@ -351,7 +416,22 @@ export async function fetchPortfolioData(): Promise<PortfolioData> {
       galleryItems: gallery ?? localGallery,
     };
   } catch {
-    return getLocalFallback();
+    return getLocalFallback(landingOptions);
+  }
+}
+
+export async function fetchProjectById(
+  id: string | number
+): Promise<ProjectItem | undefined> {
+  if (!isSupabaseConfigured) {
+    return localProjects.find((p) => String(p.id) === String(id));
+  }
+
+  try {
+    const project = await fetchProjectByIdFromSupabase(id);
+    return project ?? undefined;
+  } catch {
+    return localProjects.find((p) => String(p.id) === String(id));
   }
 }
 
@@ -365,7 +445,9 @@ export async function fetchProjectsData(): Promise<ProjectItem[]> {
       .limit(1)
       .single();
     if (!profileRow) return localProjects;
-    const result = await fetchProjectsFromSupabase(profileRow.id);
+    const result = await fetchProjectsFromSupabase(profileRow.id, {
+      includeImages: true,
+    });
     return result ?? localProjects;
   } catch {
     return localProjects;
@@ -389,23 +471,84 @@ export async function fetchExperiencesData(): Promise<ExperienceItem[]> {
   }
 }
 
-export async function fetchBlogPostsData(): Promise<BlogPost[]> {
-  if (!isSupabaseConfigured) return localBlogPosts;
+export async function fetchBlogPostsData(
+  options: FetchOptions = {}
+): Promise<BlogPost[]> {
+  const includeContent = options.includeContent ?? false;
+  if (!isSupabaseConfigured) {
+    return getLocalFallback({ includeContent }).blogPosts;
+  }
   try {
-    const result = await fetchBlogPostsFromSupabase();
-    return result ?? localBlogPosts;
+    const result = await fetchBlogPostsFromSupabase({ includeContent });
+    return result ?? getLocalFallback({ includeContent }).blogPosts;
   } catch {
-    return localBlogPosts;
+    return getLocalFallback({ includeContent }).blogPosts;
   }
 }
 
 export async function fetchBlogPostById(
   id: string | number
 ): Promise<BlogPost | undefined> {
-  const posts = await fetchBlogPostsData();
-  return posts.find(
-    (p) => String(p.id) === String(id) || p.slug === String(id)
-  );
+  if (!isSupabaseConfigured) {
+    return localBlogPosts.find(
+      (p) => String(p.id) === String(id) || p.slug === String(id)
+    );
+  }
+
+  try {
+    const isUuid =
+      typeof id === "string" &&
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+
+    let query = supabase!
+      .from("blog_posts")
+      .select(
+        "id, title, slug, excerpt, content, image_base64, image_alt, published_at, read_time, category_id"
+      )
+      .eq("is_published", true);
+
+    query = isUuid ? query.eq("id", id) : query.eq("slug", String(id));
+
+    const { data: post } = await query.maybeSingle();
+    if (!post) {
+      return localBlogPosts.find(
+        (p) => String(p.id) === String(id) || p.slug === String(id)
+      );
+    }
+
+    const [{ data: cats }, { data: tags }] = await Promise.all([
+      supabase!.from("blog_categories").select("id, name"),
+      supabase!.from("blog_post_tags").select("tag_id").eq("blog_post_id", post.id),
+    ]);
+
+    const catMap = Object.fromEntries((cats ?? []).map((c) => [c.id, c.name]));
+    let tagList: string[] = [];
+    if (tags && tags.length > 0) {
+      const tagIds = tags.map((t) => t.tag_id);
+      const { data: tagData } = await supabase!
+        .from("blog_tags")
+        .select("id, name")
+        .in("id", tagIds);
+      tagList = (tagData ?? []).map((t) => t.name);
+    }
+
+    return {
+      id: post.id,
+      slug: post.slug,
+      title: post.title,
+      excerpt: post.excerpt,
+      content: post.content ?? "",
+      date: post.published_at ?? "",
+      readTime: post.read_time ?? "",
+      category: catMap[post.category_id] ?? "Uncategorized",
+      image: resolveImage(post.image_base64),
+      tags: tagList,
+    };
+  } catch {
+    return localBlogPosts.find(
+      (p) => String(p.id) === String(id) || p.slug === String(id)
+    );
+  }
 }
 
 export async function fetchGalleryData(): Promise<GalleryItem[]> {
@@ -426,32 +569,42 @@ const localGallery: GalleryItem[] = [
     title: "Neo Telemetri",
     description: null,
     thumbnail: "/images/neo.webp",
-    className: "md:col-span-2",
+    imageAlt: "Neo Telemetri",
   },
   {
     id: 2,
     title: "Impact National Hackhaton By Maxy Academy 2024",
     description: null,
     thumbnail: "/images/blog/maxy.webp",
-    className: "col-span-1",
+    imageAlt: "Impact National Hackhaton By Maxy Academy 2024",
   },
   {
     id: 3,
     title: "Bukit Bintang",
     description: null,
     thumbnail: "/images/blog/solo.jpg",
-    className: "col-span-1",
+    imageAlt: "Bukit Bintang",
   },
   {
     id: 4,
     title: "Hackathon CyberTech PNP 2024",
     description: null,
     thumbnail: "/images/blog/wincybertech.webp",
-    className: "md:col-span-2",
+    imageAlt: "Hackathon CyberTech PNP 2024",
   },
 ];
 
-function getLocalFallback(): PortfolioData {
+function stripProjectsForLanding(projects: ProjectItem[]): ProjectItem[] {
+  return projects.map((project) => ({ ...project, images: [] }));
+}
+
+function getLocalFallback(options: FetchOptions = {}): PortfolioData {
+  const includeImages = options.includeImages ?? true;
+  const includeContent = options.includeContent ?? true;
+  const projects = includeImages
+    ? localProjects
+    : stripProjectsForLanding(localProjects);
+
   return {
     personalInfo: {
       ...localPersonalInfo,
@@ -461,9 +614,13 @@ function getLocalFallback(): PortfolioData {
     },
     aboutMe: localAboutMe,
     techStack: localTechStack,
-    experiences: localExperiences,
-    projects: localProjects,
-    blogPosts: localBlogPosts,
+    experiences: localExperiences.map((exp) =>
+      includeImages ? exp : { ...exp, image: "" }
+    ),
+    projects,
+    blogPosts: localBlogPosts.map((post) =>
+      includeContent ? post : { ...post, content: "" }
+    ),
     contactInfo: localContactInfo,
     galleryItems: localGallery,
   };

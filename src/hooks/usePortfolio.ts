@@ -6,6 +6,7 @@ import {
   fetchBlogPostsData,
   fetchBlogPostById,
   fetchGalleryData,
+  fetchProjectById,
 } from "@/services/portfolioService";
 import type {
   PortfolioData,
@@ -25,7 +26,16 @@ export function usePortfolioData() {
 export function useProjects() {
   return useQuery<ProjectItem[]>({
     queryKey: ["projects"],
-    queryFn: fetchProjectsData,
+    queryFn: () => fetchProjectsData(),
+  });
+}
+
+export function useProjectDetails(id: string | number | null | undefined) {
+  return useQuery<ProjectItem | undefined>({
+    queryKey: ["project", id],
+    queryFn: () => fetchProjectById(id!),
+    enabled: id != null && id !== "",
+    staleTime: 1000 * 60 * 5,
   });
 }
 
@@ -39,7 +49,7 @@ export function useExperiences() {
 export function useBlogPosts() {
   return useQuery<BlogPost[]>({
     queryKey: ["blogPosts"],
-    queryFn: fetchBlogPostsData,
+    queryFn: () => fetchBlogPostsData({ includeContent: false }),
   });
 }
 
