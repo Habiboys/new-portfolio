@@ -1,4 +1,5 @@
 import { ExperienceCard } from "@/components/ExperienceCard";
+import { ContactSilkBackground, SilkStaticBackground } from "@/components/ContactSilkBackground";
 import { BlogPreview } from "@/components/BlogPreview";
 import { IndexPageSkeleton } from "@/components/IndexPageSkeleton";
 import { LazyMount } from "@/components/LazyMount";
@@ -20,7 +21,6 @@ const Carousel = lazy(() => import("@/components/Carousel"));
 const Masonry = lazy(() => import("@/components/Masonry"));
 const ExperienceStack = lazy(() => import("@/components/ExperienceStack"));
 const ScrambledText = lazy(() => import("@/components/ScrambledText"));
-const Silk = lazy(() => import("@/components/Silk"));
 
 function SectionLoader({ className = "h-[480px]" }: { className?: string }) {
   return (
@@ -350,17 +350,9 @@ const Index = () => {
           <LazyMount minHeight="24rem" className="w-full min-h-[24rem] md:min-h-[30rem] md:h-[35rem] relative z-0">
             <div className="relative flex min-h-[24rem] md:min-h-0 h-full w-full flex-col items-center justify-center px-4 sm:px-6 md:px-10 py-8 md:py-4">
               {!useLightMotion ? (
-                <Suspense fallback={<div className="absolute inset-0 bg-[#7B7481]" />}>
-                  <Silk
-                    speed={5}
-                    scale={1}
-                    color="#7B7481"
-                    noiseIntensity={1.5}
-                    rotation={0}
-                  />
-                </Suspense>
+                <ContactSilkBackground paused={prefersReducedMotion} />
               ) : (
-                <div className="absolute inset-0 bg-[#7B7481]" />
+                <SilkStaticBackground />
               )}
 
               <div className="relative z-10 flex w-full flex-col items-center justify-center">

@@ -1,18 +1,9 @@
-import React, { useState } from "react";
-import { motion } from "framer-motion";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
-import { ArrowLeft } from "lucide-react";
-import { useExperiences } from "@/hooks/usePortfolio";
-import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
+import { Card, CardContent } from "@/components/ui/card";
+import { useExperiences } from "@/hooks/usePortfolio";
+import { motion } from "framer-motion";
+import { ArrowLeft } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Experience = () => {
   const { data: experiences = [] } = useExperiences();

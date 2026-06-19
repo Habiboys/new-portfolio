@@ -155,7 +155,7 @@ export default function Silk({
 
   return (
     <div className={`silk-root ${className}`.trim()}>
-      <Canvas dpr={[1, 2]} frameloop={paused ? "never" : "always"}>
+      <Canvas dpr={[1, 1.5]} gl={{ failIfMajorPerformanceCaveat: false }} frameloop={paused ? "never" : "always"}>
         <SilkPlane ref={meshRef} uniforms={uniforms} paused={paused} />
       </Canvas>
     </div>
