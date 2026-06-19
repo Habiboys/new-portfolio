@@ -55,14 +55,8 @@
 }
 
 .scroll-stack-inner--compact {
-  padding: 0 0 6vh;
+  padding: 0;
   min-height: auto;
-}
-
-@media (min-width: 768px) {
-  .scroll-stack-inner--compact {
-    padding: 0 0 8vh;
-  }
 }
 
 .scroll-stack-card--experience {

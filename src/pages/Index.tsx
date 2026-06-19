@@ -249,7 +249,7 @@ const Index = () => {
       {/* ─── EXPERIENCE ───────────────── */}
       <section
         id="experience"
-        className="relative overflow-hidden py-10 md:py-14 px-4 sm:px-6 bg-gradient-to-b from-gray-100/70 via-white to-gray-50/80"
+        className="relative overflow-visible py-10 md:py-14 px-4 sm:px-6 bg-gradient-to-b from-gray-100/70 via-white to-gray-50/80"
       >
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5 md:mb-6">
@@ -265,7 +265,7 @@ const Index = () => {
             </Link>
           </div>
 
-          <LazyMount minHeight={prefersReducedMotion ? 360 : 420}>
+          <LazyMount minHeight={prefersReducedMotion ? 360 : isMobile ? 200 : 420}>
             {prefersReducedMotion ? (
               <div className="space-y-5">
                 {experiences.map((exp, index) => (

@@ -25,6 +25,8 @@ interface ScrollStackProps {
   blurAmount?: number;
   useWindowScroll?: boolean;
   smoothScroll?: boolean;
+  endSpacerHeight?: number;
+  performanceMode?: boolean;
   onStackComplete?: () => void;
 }
 
@@ -43,11 +45,15 @@ const ScrollStack = ({
   blurAmount = 0,
   useWindowScroll = false,
   smoothScroll = true,
+  endSpacerHeight = 1,
+  performanceMode = false,
   onStackComplete,
 }: ScrollStackProps) => {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const stackCompletedRef = useRef(false);
   const animationFrameRef = useRef<number | null>(null);
+  const scrollRafRef = useRef<number | null>(null);
+  const nativeScrollHandlerRef = useRef<(() => void) | null>(null);
   const lenisRef = useRef<Lenis | null>(null);
   const cardsRef = useRef<(HTMLElement | null)[]>([]);
   const cardTopsRef = useRef<number[]>([]);
@@ -222,9 +228,18 @@ const ScrollStack = ({
   }, [updateCardTransforms]);
 
   const setupLenis = useCallback(() => {
+    const scheduleScrollUpdate = () => {
+      if (scrollRafRef.current !== null) return;
+      scrollRafRef.current = requestAnimationFrame(() => {
+        scrollRafRef.current = null;
+        handleScroll();
+      });
+    };
+
     if (useWindowScroll && !smoothScroll) {
       usingNativeScrollRef.current = true;
-      window.addEventListener("scroll", handleScroll, { passive: true });
+      nativeScrollHandlerRef.current = scheduleScrollUpdate;
+      window.addEventListener("scroll", scheduleScrollUpdate, { passive: true });
       return;
     }
 
@@ -299,13 +314,18 @@ const ScrollStack = ({
       if (i < cards.length - 1) {
         card.style.marginBottom = `${itemDistance}px`;
       }
-      card.style.willChange = "transform, filter";
       card.style.transformOrigin = "top center";
       card.style.backfaceVisibility = "hidden";
       card.style.transform = "translateZ(0)";
       card.style.webkitTransform = "translateZ(0)";
-      card.style.perspective = "1000px";
-      card.style.webkitPerspective = "1000px";
+
+      if (performanceMode) {
+        card.style.willChange = "auto";
+      } else {
+        card.style.willChange = "transform, filter";
+        card.style.perspective = "1000px";
+        card.style.webkitPerspective = "1000px";
+      }
     });
 
     measureLayout();
@@ -321,9 +341,14 @@ const ScrollStack = ({
 
     return () => {
       window.removeEventListener("resize", onResize);
-      if (usingNativeScrollRef.current) {
-        window.removeEventListener("scroll", handleScroll);
+      if (usingNativeScrollRef.current && nativeScrollHandlerRef.current) {
+        window.removeEventListener("scroll", nativeScrollHandlerRef.current);
         usingNativeScrollRef.current = false;
+        nativeScrollHandlerRef.current = null;
+      }
+      if (scrollRafRef.current !== null) {
+        cancelAnimationFrame(scrollRafRef.current);
+        scrollRafRef.current = null;
       }
       if (animationFrameRef.current !== null) {
         cancelAnimationFrame(animationFrameRef.current);
@@ -350,6 +375,8 @@ const ScrollStack = ({
     blurAmount,
     useWindowScroll,
     smoothScroll,
+    performanceMode,
+    endSpacerHeight,
     onStackComplete,
     setupLenis,
     updateCardTransforms,
@@ -363,7 +390,11 @@ const ScrollStack = ({
     >
       <div className={`scroll-stack-inner ${innerClassName}`.trim()}>
         {children}
-        <div className="scroll-stack-end" />
+        <div
+          className="scroll-stack-end"
+          style={{ height: endSpacerHeight, minHeight: endSpacerHeight > 1 ? endSpacerHeight : undefined }}
+          aria-hidden
+        />
       </div>
     </div>
   );
