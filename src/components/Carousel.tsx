@@ -45,6 +45,11 @@ function CarouselItem({
   const canHover = useMediaQuery("(hover: hover) and (pointer: fine)");
   const showContent = hovered || !canHover;
 
+  const openDetail = () => {
+    if (!canHover) return;
+    onSelectProject?.(p);
+  };
+
   return (
     <motion.div
       className="carousel-item"
@@ -54,7 +59,7 @@ function CarouselItem({
         rotateY,
       }}
       transition={transition}
-      onClick={() => onSelectProject?.(p)}
+      onClick={openDetail}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
@@ -86,18 +91,21 @@ function CarouselItem({
             {p.description}
           </p>
 
-          <div className="mt-3">
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onSelectProject?.(p);
-              }}
-              className="inline-flex items-center gap-2 px-5 py-2 bg-gray-900 text-white rounded-full font-medium text-xs hover:bg-gray-800 hover:scale-105 active:scale-95 transition-all duration-200 pointer-events-auto"
-            >
-              View Details
-              <ExternalLink className="w-3.5 h-3.5" />
-            </button>
-          </div>
+          {canHover && (
+            <div className="mt-3">
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  openDetail();
+                }}
+                className="inline-flex items-center gap-2 px-5 py-2 bg-gray-900 text-white rounded-full font-medium text-xs hover:bg-gray-800 hover:scale-105 active:scale-95 transition-all duration-200 pointer-events-auto"
+              >
+                View Details
+                <ExternalLink className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          )}
         </motion.div>
       </div>
     </motion.div>

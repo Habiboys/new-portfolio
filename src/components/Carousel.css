@@ -39,6 +39,15 @@
   cursor: grabbing;
 }
 
+@media (hover: none), (pointer: coarse) {
+  .carousel-item {
+    cursor: default;
+  }
+  .carousel-item:active {
+    cursor: default;
+  }
+}
+
 .carousel-item-bg {
   position: absolute;
   inset: 0;

@@ -95,8 +95,9 @@ const ScrollStack = ({
   }, [useWindowScroll]);
 
   const measureLayout = useCallback(() => {
+    const scroller = scrollerRef.current;
     const cards = cardsRef.current.filter(Boolean) as HTMLElement[];
-    if (!cards.length) return;
+    if (!scroller || !cards.length) return;
 
     cards.forEach((card) => {
       card.style.transform = "translateZ(0)";
@@ -109,9 +110,7 @@ const ScrollStack = ({
       return card.offsetTop;
     });
 
-    const endElement = useWindowScroll
-      ? (document.querySelector(".scroll-stack-end") as HTMLElement | null)
-      : (scrollerRef.current?.querySelector(".scroll-stack-end") as HTMLElement | null);
+    const endElement = scroller.querySelector(".scroll-stack-end") as HTMLElement | null;
 
     if (endElement) {
       endTopRef.current = useWindowScroll
@@ -302,9 +301,7 @@ const ScrollStack = ({
     if (!scroller) return;
 
     const cards = Array.from(
-      useWindowScroll
-        ? (document.querySelectorAll(".scroll-stack-card") as NodeListOf<HTMLElement>)
-        : (scroller.querySelectorAll(".scroll-stack-card") as NodeListOf<HTMLElement>)
+      scroller.querySelectorAll(".scroll-stack-card") as NodeListOf<HTMLElement>
     );
 
     cardsRef.current = cards;
@@ -332,15 +329,24 @@ const ScrollStack = ({
     setupLenis();
     updateCardTransforms();
 
-    const onResize = () => {
+    const remeasure = () => {
       measureLayout();
       updateCardTransforms();
     };
 
+    const onResize = () => {
+      remeasure();
+    };
+
     window.addEventListener("resize", onResize, { passive: true });
+    window.addEventListener("orientationchange", remeasure, { passive: true });
+
+    const remeasureTimer = window.setTimeout(remeasure, 150);
 
     return () => {
+      window.clearTimeout(remeasureTimer);
       window.removeEventListener("resize", onResize);
+      window.removeEventListener("orientationchange", remeasure);
       if (usingNativeScrollRef.current && nativeScrollHandlerRef.current) {
         window.removeEventListener("scroll", nativeScrollHandlerRef.current);
         usingNativeScrollRef.current = false;

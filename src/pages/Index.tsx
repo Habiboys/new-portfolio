@@ -265,7 +265,7 @@ const Index = () => {
             </Link>
           </div>
 
-          <LazyMount minHeight={prefersReducedMotion ? 360 : isMobile ? 200 : 420}>
+          <LazyMount minHeight={prefersReducedMotion ? 360 : 320}>
             {prefersReducedMotion ? (
               <div className="space-y-5">
                 {experiences.map((exp, index) => (
@@ -307,7 +307,7 @@ const Index = () => {
                     autoplayDelay={2200}
                     pauseOnHover={true}
                     loop={true}
-                    onSelectProject={setSelectedProject}
+                    onSelectProject={isMobile ? undefined : setSelectedProject}
                   />
                 </Suspense>
               ) : (
