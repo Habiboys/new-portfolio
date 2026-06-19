@@ -24,6 +24,7 @@ interface ScrollStackProps {
   rotationAmount?: number;
   blurAmount?: number;
   useWindowScroll?: boolean;
+  smoothScroll?: boolean;
   onStackComplete?: () => void;
 }
 
@@ -41,6 +42,7 @@ const ScrollStack = ({
   rotationAmount = 0,
   blurAmount = 0,
   useWindowScroll = false,
+  smoothScroll = true,
   onStackComplete,
 }: ScrollStackProps) => {
   const scrollerRef = useRef<HTMLDivElement>(null);
@@ -54,6 +56,7 @@ const ScrollStack = ({
     new Map<number, { translateY: number; scale: number; rotation: number; blur: number }>()
   );
   const isUpdatingRef = useRef(false);
+  const usingNativeScrollRef = useRef(false);
 
   const calculateProgress = useCallback((scrollTop: number, start: number, end: number) => {
     if (scrollTop < start) return 0;
@@ -219,6 +222,12 @@ const ScrollStack = ({
   }, [updateCardTransforms]);
 
   const setupLenis = useCallback(() => {
+    if (useWindowScroll && !smoothScroll) {
+      usingNativeScrollRef.current = true;
+      window.addEventListener("scroll", handleScroll, { passive: true });
+      return;
+    }
+
     if (useWindowScroll) {
       const lenis = new Lenis({
         duration: 1.2,
@@ -271,7 +280,7 @@ const ScrollStack = ({
 
     lenisRef.current = lenis;
     return lenis;
-  }, [handleScroll, useWindowScroll]);
+  }, [handleScroll, smoothScroll, useWindowScroll]);
 
   useLayoutEffect(() => {
     const scroller = scrollerRef.current;
@@ -312,6 +321,10 @@ const ScrollStack = ({
 
     return () => {
       window.removeEventListener("resize", onResize);
+      if (usingNativeScrollRef.current) {
+        window.removeEventListener("scroll", handleScroll);
+        usingNativeScrollRef.current = false;
+      }
       if (animationFrameRef.current !== null) {
         cancelAnimationFrame(animationFrameRef.current);
       }
@@ -336,6 +349,7 @@ const ScrollStack = ({
     rotationAmount,
     blurAmount,
     useWindowScroll,
+    smoothScroll,
     onStackComplete,
     setupLenis,
     updateCardTransforms,

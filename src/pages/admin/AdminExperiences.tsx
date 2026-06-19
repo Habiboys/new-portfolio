@@ -4,7 +4,7 @@ import { ImageUpload } from "@/components/ImageUpload";
 import { supabase } from "@/lib/supabase";
 import { fetchExperiencesData } from "@/services/portfolioService";
 import { toast } from "sonner";
-import { Plus, Trash2, Save, Loader2 } from "lucide-react";
+import { Plus, Trash2, Save, Loader2, ArrowUp, ArrowDown } from "lucide-react";
 
 type Item = {
   id?: string; title: string; organization: string; period_label: string;
@@ -36,10 +36,21 @@ export default function AdminExperiences() {
   }, []);
 
   const add = () => setItems([...items, { title: "", organization: "", period_label: "", description: "", image_base64: "", image_alt: "", sort_order: items.length + 1, is_current: false }]);
-  const remove = (i: number) => setItems(items.filter((_, idx) => idx !== i));
+  const remove = (i: number) => setItems(items.filter((_, idx) => idx !== i).map((item, idx) => ({ ...item, sort_order: idx + 1 })));
   const update = (i: number, field: keyof Item, val: any) => {
     const next = [...items]; (next[i] as any)[field] = val; setItems(next);
   };
+
+  const reorder = (from: number, to: number) => {
+    if (to < 0 || to >= items.length || from === to) return;
+    const next = [...items];
+    const [moved] = next.splice(from, 1);
+    next.splice(to, 0, moved);
+    setItems(next.map((item, idx) => ({ ...item, sort_order: idx + 1 })));
+  };
+
+  const moveUp = (i: number) => reorder(i, i - 1);
+  const moveDown = (i: number) => reorder(i, i + 1);
 
   const save = async () => {
     if (!profileId) return;
@@ -61,7 +72,9 @@ export default function AdminExperiences() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Experiences</h1>
-          <p className="text-sm text-gray-500 mt-1">Riwayat pengalaman kerja</p>
+          <p className="text-sm text-gray-500 mt-1 max-w-2xl">
+            Riwayat pengalaman kerja. Urutan item (#1 paling atas) menentukan tampilan di beranda dan halaman Experience — gunakan tombol panah untuk mengatur posisi, lalu Simpan.
+          </p>
         </div>
         <div className="flex gap-2">
           <button onClick={add} className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm font-medium transition-colors">
@@ -77,7 +90,31 @@ export default function AdminExperiences() {
         {items.map((item, i) => (
           <div key={i} className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
             <div className="flex items-center justify-between px-5 py-3 bg-gray-50 border-b border-gray-100">
-              <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">Experience #{i + 1}</span>
+              <div className="flex items-center gap-3">
+                <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Urutan #{i + 1}
+                </span>
+                <div className="flex items-center gap-1">
+                  <button
+                    type="button"
+                    onClick={() => moveUp(i)}
+                    disabled={i === 0}
+                    aria-label="Pindah ke atas"
+                    className="p-1.5 rounded-md text-gray-500 hover:text-gray-900 hover:bg-gray-200/70 disabled:opacity-30 disabled:pointer-events-none"
+                  >
+                    <ArrowUp className="w-4 h-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => moveDown(i)}
+                    disabled={i === items.length - 1}
+                    aria-label="Pindah ke bawah"
+                    className="p-1.5 rounded-md text-gray-500 hover:text-gray-900 hover:bg-gray-200/70 disabled:opacity-30 disabled:pointer-events-none"
+                  >
+                    <ArrowDown className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
               <button onClick={() => remove(i)} className="flex items-center gap-1 text-xs text-red-600 hover:text-red-700 px-2 py-1 rounded hover:bg-red-50"><Trash2 className="w-3 h-3" /> Hapus</button>
             </div>
             <div className="p-5 space-y-4">

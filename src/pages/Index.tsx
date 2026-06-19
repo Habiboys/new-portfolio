@@ -61,6 +61,7 @@ const Index = () => {
   );
   const isMobile = useMediaQuery("(max-width: 768px)");
   const prefersReducedMotion = usePrefersReducedMotion();
+  // Gallery grid + carousel autoplay only — experience & contact stay animated on mobile
   const useLightMotion = isMobile || prefersReducedMotion;
   const validGalleryItems = galleryItems.filter((item) => item.thumbnail);
   const masonryItems = useMemo(
@@ -264,10 +265,10 @@ const Index = () => {
             </Link>
           </div>
 
-          <LazyMount minHeight={useLightMotion ? 360 : 420}>
-            {useLightMotion ? (
+          <LazyMount minHeight={prefersReducedMotion ? 360 : 420}>
+            {prefersReducedMotion ? (
               <div className="space-y-5">
-                {experiences.slice(0, 3).map((exp, index) => (
+                {experiences.map((exp, index) => (
                   <ExperienceCard key={index} exp={exp} index={index} />
                 ))}
               </div>
@@ -349,10 +350,10 @@ const Index = () => {
           <div className="absolute inset-x-0 top-0 h-20 sm:h-28 bg-gradient-to-b from-gray-100/60 to-transparent pointer-events-none z-[1]" />
           <LazyMount minHeight="24rem" className="w-full min-h-[24rem] md:min-h-[30rem] md:h-[35rem] relative z-0">
             <div className="relative flex min-h-[24rem] md:min-h-0 h-full w-full flex-col items-center justify-center px-4 sm:px-6 md:px-10 py-8 md:py-4">
-              {!useLightMotion ? (
-                <ContactSilkBackground paused={prefersReducedMotion} />
-              ) : (
+              {prefersReducedMotion ? (
                 <SilkStaticBackground />
+              ) : (
+                <ContactSilkBackground />
               )}
 
               <div className="relative z-10 flex w-full flex-col items-center justify-center">
