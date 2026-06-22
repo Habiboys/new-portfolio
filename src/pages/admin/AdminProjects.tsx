@@ -117,12 +117,21 @@ export default function AdminProjects() {
                 <div><label className="text-xs font-medium text-gray-500 mb-1 block">Source Code URL</label><input value={p.source_code_url} onChange={(e) => update(i, "source_code_url", e.target.value)} className="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-gray-900" /></div>
               </div>
               <div><label className="text-xs font-medium text-gray-500 mb-1 block">Description</label><input value={p.description} onChange={(e) => update(i, "description", e.target.value)} className="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-gray-900" /></div>
-              <div><label className="text-xs font-medium text-gray-500 mb-1 block">Detailed Description</label><textarea value={p.detailed_description} onChange={(e) => update(i, "detailed_description", e.target.value)} className="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-gray-900" rows={3} /></div>
-              <ImageUpload label="Preview Image" currentImage={p.preview_image_base64} onImageChange={(b64) => update(i, "preview_image_base64", b64)} />
+              <div>
+                <label className="text-xs font-medium text-gray-500 mb-1 block">Detailed Description</label><textarea value={p.detailed_description} onChange={(e) => update(i, "detailed_description", e.target.value)} className="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-gray-900" rows={3} /></div>
+              <ImageUpload 
+    label="Preview Image" 
+    currentImages={p.preview_image_base64 ? [p.preview_image_base64] : []} 
+    onImagesChange={(imgs) => update(i, "preview_image_base64", imgs[0] || "")} 
+  />
               <div><label className="text-xs font-medium text-gray-500 mb-1 block">Technologies (pisahkan koma)</label><input value={p.tech.join(", ")} onChange={(e) => update(i, "tech", e.target.value.split(",").map((s: string) => s.trim()).filter(Boolean))} className="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-gray-900" /></div>
               <div><label className="text-xs font-medium text-gray-500 mb-1 block">Features (1 per baris)</label><textarea value={p.features.join("\n")} onChange={(e) => update(i, "features", e.target.value.split("\n").filter(Boolean))} className="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-gray-900" rows={3} /></div>
-              <div><label className="text-xs font-medium text-gray-500 mb-2 block">Screenshots</label>{p.images.map((img, ii) => (<div key={ii} className="flex gap-2 items-center mb-2"><img src={img} alt="" className="w-16 h-12 object-cover rounded border" /><button onClick={() => update(i, "images", p.images.filter((_, idx) => idx !== ii))} className="text-red-500 text-xs hover:text-red-700">Hapus</button></div>))}
-                <ImageUpload label="" currentImage={null} onImageChange={(b64) => update(i, "images", [...p.images, b64])} />
+              <div>
+               <ImageUpload 
+    label="Screenshots (Multiple)" 
+    currentImages={p.images} 
+    onImagesChange={(imgs) => update(i, "images", imgs)} 
+  />
               </div>
               <label className="flex items-center gap-2 text-sm cursor-pointer"><input type="checkbox" checked={p.is_featured} onChange={(e) => update(i, "is_featured", e.target.checked)} className="rounded" /> Featured</label>
             </div>

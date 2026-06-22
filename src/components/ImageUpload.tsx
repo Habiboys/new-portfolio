@@ -1,98 +1,136 @@
 import { resolveImage } from "@/lib/imageUtils";
-import { uploadPortfolioImage } from "@/lib/storage";
+import { uploadPortfolioImage, getStoragePublicUrl } from "@/lib/storage";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
+import { X, Loader2 } from "lucide-react"; // Ambil icon X dari lucide
 
 type Props = {
-  currentImage?: string | null;
-  onImageChange: (value: string) => void;
+  currentImages?: string[]; 
+  onImagesChange: (images: string[]) => void; 
   label?: string;
   useStorage?: boolean;
   storageFolder?: string;
 };
 
 export function ImageUpload({
-  currentImage,
-  onImageChange,
+  currentImages = [], 
+  onImagesChange,
   label,
   useStorage = true,
   storageFolder = "uploads",
 }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
-  const previewSrc = resolveImage(currentImage);
+  
+  const previewImages = currentImages.map((img) => {
+    if (img && img.startsWith("storage:")) {
+      const path = img.replace("storage:", "");
+      return getStoragePublicUrl(path);
+    }
+    return resolveImage(img) || img; 
+  });
 
   const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    if (!file.type.startsWith("image/")) {
-      toast.error("File harus berupa gambar.");
-      return;
-    }
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
 
     setUploading(true);
+
     try {
-      if (useStorage) {
-        const result = await uploadPortfolioImage(file, storageFolder);
-        if (result) {
-          onImageChange(result.ref);
-          toast.success("Gambar diunggah ke Storage.");
-          return;
+      const uploadedImages: string[] = [];
+
+      for (const file of files) {
+        if (!file.type.startsWith("image/")) {
+          toast.error(`${file.name} bukan gambar`);
+          continue;
         }
-        toast.warning("Storage gagal — menyimpan sebagai base64. Pastikan bucket portfolio-media sudah public.");
+
+        if (useStorage) {
+          const result = await uploadPortfolioImage(file, storageFolder);
+          if (result) {
+            // Kita simpan format "storage:path" ke database sesuai standarmu
+            uploadedImages.push(result.ref); 
+            continue;
+          }
+        }
+
+        // Fallback base64
+        const base64 = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result as string);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+        uploadedImages.push(base64);
       }
 
-      const reader = new FileReader();
-      reader.onload = () => {
-        onImageChange(reader.result as string);
-        toast.success("Gambar disimpan (base64).");
-      };
-      reader.onerror = () => toast.error("Gagal membaca file gambar.");
-      reader.readAsDataURL(file);
+      // Menggabungkan gambar lama dengan yang baru diupload
+      onImagesChange([...currentImages, ...uploadedImages]);
+
+      if (uploadedImages.length > 0) {
+        toast.success(`${uploadedImages.length} gambar berhasil ditambahkan`);
+      }
     } finally {
       setUploading(false);
       if (inputRef.current) inputRef.current.value = "";
     }
   };
 
+  // Fungsi untuk menghapus salah satu gambar dari array
+  const handleRemove = (indexToRemove: number) => {
+    const filtered = currentImages.filter((_, idx) => idx !== indexToRemove);
+    onImagesChange(filtered);
+  };
+
   return (
-    <div className="space-y-2">
+    <div className="space-y-3">
       {label && (
-        <label className="block text-sm font-medium text-gray-700">{label}</label>
+        <label className="block text-xs font-medium text-gray-500">{label}</label>
       )}
-      <div className="flex items-center gap-4">
-        {previewSrc ? (
-          <img
-            src={previewSrc}
-            alt="preview"
-            className="w-20 h-20 object-cover rounded border"
-            onError={() => toast.error("Preview gagal — cek bucket Storage public atau upload ulang.")}
-          />
-        ) : currentImage?.includes("PASTE_") ? (
-          <div className="w-20 h-20 rounded border border-dashed border-amber-300 bg-amber-50 flex items-center justify-center text-[10px] text-amber-700 text-center px-1">
-            Placeholder — upload gambar
+
+      <div className="flex gap-2 flex-wrap items-center">
+        {/* Render Preview dengan Tombol Hapus */}
+        {previewImages.map((img, index) => (
+          <div key={index} className="relative w-20 h-20 border rounded group overflow-hidden bg-gray-50">
+            <img
+              src={img}
+              alt={`preview-${index}`}
+              className="w-full h-full object-cover"
+            />
+            {/* Tombol Hapus melayang di pojok kanan atas gambar */}
+            <button
+              type="button"
+              onClick={() => handleRemove(index)}
+              className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-0.5 opacity-80 hover:opacity-100 transition-opacity"
+            >
+              <X className="w-3 h-3" />
+            </button>
           </div>
-        ) : null}
-        <button
-          type="button"
-          disabled={uploading}
-          onClick={() => inputRef.current?.click()}
-          className="px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 text-sm transition-colors disabled:opacity-50"
-        >
-          {uploading ? "Mengunggah..." : previewSrc || currentImage ? "Ganti Gambar" : "Pilih Gambar"}
-        </button>
-        <input
-          ref={inputRef}
-          type="file"
-          accept="image/*"
-          onChange={handleFile}
-          className="hidden"
-        />
+        ))}
+
+        {/* Kotak Tombol Upload (Style Kotak Putus-putus) */}
+        <label className={`w-20 h-20 flex flex-col items-center justify-center border-2 border-dashed rounded cursor-pointer hover:bg-gray-50 transition-colors ${uploading ? 'pointer-events-none opacity-50' : ''}`}>
+          {uploading ? (
+            <Loader2 className="w-5 h-5 text-gray-400 animate-spin" />
+          ) : (
+            <span className="text-xl text-gray-400">+</span>
+          )}
+          <span className="text-[10px] text-gray-400 mt-1">{uploading ? 'Uploading' : 'Tambah'}</span>
+          <input
+            type="file"
+            ref={inputRef}
+            multiple
+            accept="image/*"
+            onChange={handleFile}
+            disabled={uploading}
+            className="hidden" // Sembunyikan input bawaan browser yang berantakan
+          />
+        </label>
       </div>
+
       {useStorage && (
-        <p className="text-xs text-gray-500">
-          Upload ke Supabase Storage (<code>portfolio-media</code>). Jika gagal, otomatis fallback base64.
+        <p className="text-[10px] text-gray-400">
+          Otomatis diupload ke storage. Jika gagal, otomatis tersimpan sebagai fallback base64.
         </p>
       )}
     </div>
