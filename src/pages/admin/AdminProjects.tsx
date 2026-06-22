@@ -4,7 +4,7 @@ import { ImageUpload } from "@/components/ImageUpload";
 import { supabase } from "@/lib/supabase";
 import { fetchProjectsData } from "@/services/portfolioService";
 import { toast } from "sonner";
-import { Plus, Trash2, Save, Loader2 } from "lucide-react";
+import { Plus, Trash2, Save, Loader2, ChevronDown, ChevronUp } from "lucide-react"; // Tambahkan ChevronDown & ChevronUp
 
 type Project = {
   id?: string; title: string; slug: string; description: string; detailed_description: string;
@@ -17,6 +17,9 @@ export default function AdminProjects() {
   const [profileId, setProfileId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  console.log("Komponen AdminProjects di-render ulang!");
+  // STATE BARU: Untuk melacak index card mana saja yang terbuka (expand)
+  const [expanded, setExpanded] = useState<boolean[]>([]);
 
   useEffect(() => {
     (async () => {
@@ -42,6 +45,8 @@ export default function AdminProjects() {
           images: (images ?? []).filter((img) => img.project_id === p.id).map((img) => img.image_base64),
           tech: (tech ?? []).filter((t) => t.project_id === p.id).map((t) => t.technology_name),
         })));
+        // Default: semua card ditutup (false)
+        setExpanded(new Array(projects.length).fill(false));
       } else {
         const fb = await fetchProjectsData();
         setItems(fb.map((p, i) => ({
@@ -51,15 +56,32 @@ export default function AdminProjects() {
           live_demo_url: p.liveDemo, source_code_url: p.sourceCode, sort_order: i + 1, is_featured: true,
           features: p.features, images: p.images, tech: p.tech,
         })));
+        setExpanded(new Array(fb.length).fill(false));
       }
       setLoading(false);
     })();
   }, []);
 
-  const add = () => setItems([...items, { title: "", slug: "", description: "", detailed_description: "", preview_image_base64: "", preview_image_alt: "", live_demo_url: "", source_code_url: "", sort_order: items.length + 1, is_featured: true, features: [], images: [], tech: [] }]);
-  const remove = (i: number) => setItems(items.filter((_, idx) => idx !== i));
+  const add = () => {
+    setItems([...items, { title: "", slug: "", description: "", detailed_description: "", preview_image_base64: "", preview_image_alt: "", live_demo_url: "", source_code_url: "", sort_order: items.length + 1, is_featured: true, features: [], images: [], tech: [] }]);
+    // Buka card yang baru ditambahkan secara otomatis (true)
+    setExpanded([...expanded, true]);
+  };
+
+  const remove = (i: number) => {
+    setItems(items.filter((_, idx) => idx !== i));
+    setExpanded(expanded.filter((_, idx) => idx !== i));
+  };
+
   const update = (i: number, field: keyof Project, val: any) => {
     const next = [...items]; (next[i] as any)[field] = val; setItems(next);
+  };
+
+  // FUNGSI BARU: Untuk toggle buka/tutup card
+  const toggleExpand = (i: number) => {
+    const next = [...expanded];
+    next[i] = !next[i];
+    setExpanded(next);
   };
 
   const save = async () => {
@@ -102,39 +124,65 @@ export default function AdminProjects() {
           <button onClick={save} disabled={saving} className="flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 disabled:opacity-50 text-sm font-medium">{saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />} Simpan</button>
         </div>
       </div>
-      <div className="space-y-6">
+      
+      <div className="space-y-4">
         {items.map((p, i) => (
-          <div key={i} className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-            <div className="flex items-center justify-between px-5 py-3 bg-gray-50 border-b border-gray-100">
-              <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">Project #{i + 1}</span>
-              <button onClick={() => remove(i)} className="flex items-center gap-1 text-xs text-red-600 hover:bg-red-50 px-2 py-1 rounded"><Trash2 className="w-3 h-3" /> Hapus</button>
-            </div>
-            <div className="p-5 space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div><label className="text-xs font-medium text-gray-500 mb-1 block">Title</label><input value={p.title} onChange={(e) => update(i, "title", e.target.value)} className="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-gray-900" /></div>
-                <div><label className="text-xs font-medium text-gray-500 mb-1 block">Slug</label><input value={p.slug} onChange={(e) => update(i, "slug", e.target.value)} className="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-gray-900" /></div>
-                <div><label className="text-xs font-medium text-gray-500 mb-1 block">Live Demo URL</label><input value={p.live_demo_url} onChange={(e) => update(i, "live_demo_url", e.target.value)} className="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-gray-900" /></div>
-                <div><label className="text-xs font-medium text-gray-500 mb-1 block">Source Code URL</label><input value={p.source_code_url} onChange={(e) => update(i, "source_code_url", e.target.value)} className="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-gray-900" /></div>
+          <div key={i} className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden transition-all duration-200">
+            
+            {/* HEADER CARD (Bisa diklik untuk Expand/Collapse) */}
+            <div 
+              onClick={() => toggleExpand(i)} 
+              className="flex items-center justify-between px-5 py-4 bg-gray-50 border-b border-gray-100 cursor-pointer hover:bg-gray-100 transition-colors"
+            >
+              <div className="flex items-center gap-3">
+                {expanded[i] ? <ChevronUp className="w-5 h-5 text-gray-400" /> : <ChevronDown className="w-5 h-5 text-gray-400" />}
+                <span className="text-sm font-semibold text-gray-700 uppercase tracking-wider">
+                  {p.title ? p.title : `Project Baru #${i + 1}`}
+                </span>
               </div>
-              <div><label className="text-xs font-medium text-gray-500 mb-1 block">Description</label><input value={p.description} onChange={(e) => update(i, "description", e.target.value)} className="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-gray-900" /></div>
-              <div>
-                <label className="text-xs font-medium text-gray-500 mb-1 block">Detailed Description</label><textarea value={p.detailed_description} onChange={(e) => update(i, "detailed_description", e.target.value)} className="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-gray-900" rows={3} /></div>
-              <ImageUpload 
-    label="Preview Image" 
-    currentImages={p.preview_image_base64 ? [p.preview_image_base64] : []} 
-    onImagesChange={(imgs) => update(i, "preview_image_base64", imgs[0] || "")} 
-  />
-              <div><label className="text-xs font-medium text-gray-500 mb-1 block">Technologies (pisahkan koma)</label><input value={p.tech.join(", ")} onChange={(e) => update(i, "tech", e.target.value.split(",").map((s: string) => s.trim()).filter(Boolean))} className="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-gray-900" /></div>
-              <div><label className="text-xs font-medium text-gray-500 mb-1 block">Features (1 per baris)</label><textarea value={p.features.join("\n")} onChange={(e) => update(i, "features", e.target.value.split("\n").filter(Boolean))} className="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-gray-900" rows={3} /></div>
-              <div>
-               <ImageUpload 
-    label="Screenshots (Multiple)" 
-    currentImages={p.images} 
-    onImagesChange={(imgs) => update(i, "images", imgs)} 
-  />
-              </div>
-              <label className="flex items-center gap-2 text-sm cursor-pointer"><input type="checkbox" checked={p.is_featured} onChange={(e) => update(i, "is_featured", e.target.checked)} className="rounded" /> Featured</label>
+              
+              {/* Tombol Hapus: Perlu stopPropagation agar klik hapus tidak memicu expand/collapse */}
+              <button 
+                onClick={(e) => { e.stopPropagation(); remove(i); }} 
+                className="flex items-center gap-1 text-xs text-red-600 hover:bg-red-100 px-2 py-1.5 rounded transition-colors"
+              >
+                <Trash2 className="w-3.5 h-3.5" /> Hapus
+              </button>
             </div>
+
+            {/* BODY CARD (Hanya dirender jika expanded[i] bernilai true) */}
+            {expanded[i] && (
+              <div className="p-5 space-y-5 animate-in fade-in slide-in-from-top-2">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div><label className="text-xs font-medium text-gray-500 mb-1 block">Title</label><input value={p.title} onChange={(e) => update(i, "title", e.target.value)} className="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-gray-900" /></div>
+                  <div><label className="text-xs font-medium text-gray-500 mb-1 block">Slug</label><input value={p.slug} onChange={(e) => update(i, "slug", e.target.value)} className="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-gray-900" /></div>
+                  <div><label className="text-xs font-medium text-gray-500 mb-1 block">Live Demo URL</label><input value={p.live_demo_url} onChange={(e) => update(i, "live_demo_url", e.target.value)} className="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-gray-900" /></div>
+                  <div><label className="text-xs font-medium text-gray-500 mb-1 block">Source Code URL</label><input value={p.source_code_url} onChange={(e) => update(i, "source_code_url", e.target.value)} className="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-gray-900" /></div>
+                </div>
+                <div><label className="text-xs font-medium text-gray-500 mb-1 block">Description</label><input value={p.description} onChange={(e) => update(i, "description", e.target.value)} className="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-gray-900" /></div>
+                <div>
+                  <label className="text-xs font-medium text-gray-500 mb-1 block">Detailed Description</label><textarea value={p.detailed_description} onChange={(e) => update(i, "detailed_description", e.target.value)} className="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-gray-900" rows={3} />
+                </div>
+                
+                <ImageUpload 
+                  label="Preview Image" 
+                  currentImages={p.preview_image_base64 ? [p.preview_image_base64] : []} 
+                  onImagesChange={(imgs) => update(i, "preview_image_base64", imgs[0] || "")} 
+                />
+                
+                <div><label className="text-xs font-medium text-gray-500 mb-1 block">Technologies (pisahkan koma)</label><input value={p.tech.join(", ")} onChange={(e) => update(i, "tech", e.target.value.split(",").map((s: string) => s.trim()).filter(Boolean))} className="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-gray-900" /></div>
+                <div><label className="text-xs font-medium text-gray-500 mb-1 block">Features (1 per baris)</label><textarea value={p.features.join("\n")} onChange={(e) => update(i, "features", e.target.value.split("\n").filter(Boolean))} className="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-gray-900" rows={3} /></div>
+                
+                <div>
+                  <ImageUpload 
+                    label="Screenshots (Multiple)" 
+                    currentImages={p.images} 
+                    onImagesChange={(imgs) => update(i, "images", imgs)} 
+                  />
+                </div>
+                <label className="flex items-center gap-2 text-sm cursor-pointer"><input type="checkbox" checked={p.is_featured} onChange={(e) => update(i, "is_featured", e.target.checked)} className="rounded" /> Featured</label>
+              </div>
+            )}
           </div>
         ))}
       </div>
